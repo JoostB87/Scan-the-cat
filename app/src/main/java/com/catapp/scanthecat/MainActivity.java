@@ -116,45 +116,49 @@ public class MainActivity extends MenuActivity {
 
                     System.out.println(resultCats);
 
-                    /*
                     Gson gson = new Gson();
                     // Convert JSON File to Java Object
-                    Boek[] boeken = gson.fromJson(finalResultNUR[0], Boek[].class);
+                    Cat[] cats = gson.fromJson(resultCats, Cat[].class);
 
                     //check het aantal resultaten
-                    int countResults = boeken.length;
+                    int countResults = cats.length;
+                    System.out.println("AATNAL: " + countResults);
                     // dismiss the progress dialog after receiving data from API
                     progressDialog.dismiss();
                     //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
-                    myUrl = "http://85.215.228.51:8080/";
+                    myUrl = "https://api.api-ninjas.com/v1/cats?name=";
 
                     switch(countResults) {
                         case 0:
-                            Toast.makeText(MainActivity.this, "Geen resultaten", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "No results", Toast.LENGTH_SHORT).show();
                             break;
                         case 1:
-                            //Ga direct naar displaybookresult, geen lijst nodig
+                            //Ga direct naar displaycatresult, geen lijst nodig
+                            System.out.println("1 kat: " + cats[0].getName());
+                            /*
                             Intent intentResult = new Intent(MainActivity.this, DisplayBookResultActivity.class);
                             intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intentResult.putExtra("result", boeken[0]);
                             getApplicationContext().startActivity(intentResult);
                             //https://coderedirect.com/questions/513788/android-asynctask-start-new-activity-in-onpostexecute
+                            */
                             break;
                         default:
                             //Meerdere results, dus resultlijst tonen
+                            for (Cat c : cats) {
+                                System.out.println("Meerdere katten: " + c.getName());
+                            }
+                            /*
                             Intent intentResultList = new Intent(MainActivity.this, DisplayResultListActivity.class);
                             intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intentResultList.putExtra("result", boeken);
                             intentResultList.putExtra("afkomst", "MainActivity");
                             getApplicationContext().startActivity(intentResultList);
+                            */
                             break;
                     }
-                    */
                 }
             });
         }
     }
 }
-
-//ToDo Cat object van maken
-//{"length": "Medium to Large", "origin": "Great Britain", "image_link": "https://api-ninjas.com/images/cats/british_longhair.jpg", "family_friendly": 4, "shedding": 4, "general_health": 3, "playfulness": 3, "meowing": 3, "children_friendly": 4, "stranger_friendly": 4, "grooming": 2, "intelligence": 4, "other_pets_friendly": 3, "min_weight": 9.0, "max_weight": 18.0, "min_life_expectancy": 15.0, "max_life_expectancy": 17.0, "name": "British Longhair"},
