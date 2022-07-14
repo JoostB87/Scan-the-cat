@@ -3,6 +3,7 @@ package com.catapp.scanthecat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -135,26 +136,26 @@ public class MainActivity extends MenuActivity {
                         case 1:
                             //Ga direct naar displaycatresult, geen lijst nodig
                             System.out.println("1 kat: " + cats[0].getName());
-                            /*
-                            Intent intentResult = new Intent(MainActivity.this, DisplayBookResultActivity.class);
+
+                            Intent intentResult = new Intent(MainActivity.this, DisplayCatResultActivity.class);
                             intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intentResult.putExtra("result", boeken[0]);
+                            intentResult.putExtra("result", cats[0]);
                             getApplicationContext().startActivity(intentResult);
                             //https://coderedirect.com/questions/513788/android-asynctask-start-new-activity-in-onpostexecute
-                            */
+
                             break;
                         default:
                             //Meerdere results, dus resultlijst tonen
                             for (Cat c : cats) {
                                 System.out.println("Meerdere katten: " + c.getName());
                             }
-                            /*
-                            Intent intentResultList = new Intent(MainActivity.this, DisplayResultListActivity.class);
+
+                            Intent intentResultList = new Intent(MainActivity.this, DisplayCatListActivity.class);
                             intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intentResultList.putExtra("result", boeken);
+                            intentResultList.putExtra("result", cats);
                             intentResultList.putExtra("afkomst", "MainActivity");
                             getApplicationContext().startActivity(intentResultList);
-                            */
+
                             break;
                     }
                 }
