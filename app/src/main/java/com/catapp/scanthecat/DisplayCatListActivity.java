@@ -26,7 +26,6 @@ public class DisplayCatListActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             cats = (Cat[]) extras.get("result");
-            afkomst = extras.getString("afkomst");
         }
 
         CatResultListRecViewAdapter adapter = new CatResultListRecViewAdapter(cats);

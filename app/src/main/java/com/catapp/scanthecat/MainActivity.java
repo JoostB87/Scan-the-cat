@@ -114,16 +114,12 @@ public class MainActivity extends MenuActivity {
             runOnUiThread(new Runnable() {
                 public void run() {
                     // do onPostExecute stuff GUI
-
-                    System.out.println(resultCats);
-
                     Gson gson = new Gson();
                     // Convert JSON File to Java Object
                     Cat[] cats = gson.fromJson(resultCats, Cat[].class);
 
                     //check het aantal resultaten
                     int countResults = cats.length;
-                    System.out.println("AATNAL: " + countResults);
                     // dismiss the progress dialog after receiving data from API
                     progressDialog.dismiss();
                     //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
@@ -135,8 +131,6 @@ public class MainActivity extends MenuActivity {
                             break;
                         case 1:
                             //Ga direct naar displaycatresult, geen lijst nodig
-                            System.out.println("1 kat: " + cats[0].getName());
-
                             Intent intentResult = new Intent(MainActivity.this, DisplayCatResultActivity.class);
                             intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intentResult.putExtra("result", cats[0]);
@@ -146,14 +140,9 @@ public class MainActivity extends MenuActivity {
                             break;
                         default:
                             //Meerdere results, dus resultlijst tonen
-                            for (Cat c : cats) {
-                                System.out.println("Meerdere katten: " + c.getName());
-                            }
-
                             Intent intentResultList = new Intent(MainActivity.this, DisplayCatListActivity.class);
                             intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intentResultList.putExtra("result", cats);
-                            intentResultList.putExtra("afkomst", "MainActivity");
                             getApplicationContext().startActivity(intentResultList);
 
                             break;
