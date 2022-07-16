@@ -8,8 +8,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.gson.Gson;
 
 import java.io.InputStream;
@@ -20,9 +27,8 @@ import java.net.URL;
 public class MainActivity extends MenuActivity {
 
     private EditText editTextSearchCat;
-    private Button searchCatButton;
     private String myUrl = "https://api.api-ninjas.com/v1/cats?name=";
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +36,19 @@ public class MainActivity extends MenuActivity {
         setContentView(R.layout.activity_main);
 
         editTextSearchCat = findViewById(R.id.searchCatEditText);
-        searchCatButton = findViewById(R.id.searchCatButton);
+        Button searchCatButton = findViewById(R.id.searchCatButton);
+        ImageView imageCat = findViewById(R.id.imageCat);
+        imageCat.setImageResource(R.mipmap.ic_launcher_cat_round);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdView mAdView = findViewById(R.id.adViewMain);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         searchCatButton.setOnClickListener(new View.OnClickListener() {
             @Override

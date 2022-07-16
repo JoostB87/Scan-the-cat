@@ -9,10 +9,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import org.w3c.dom.Text;
 
-public class DisplayCatResultActivity extends AppCompatActivity {
+public class DisplayCatResultActivity extends MenuActivity {
 
     private Cat cats;
 
@@ -48,11 +53,21 @@ public class DisplayCatResultActivity extends AppCompatActivity {
                 .load(cats.getImage_link())
                 .into(imageCat);
 
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdView mAdView = findViewById(R.id.adViewDetails);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         txtCatName.setText(cats.getName());
         txtCatOrigin.setText(cats.getOrigin());
         txtCatLength.setText(cats.getLength());
-        txtCatWeight.setText(cats.getMin_weight() + " - " + cats.getMax_weight());
-        txtCatLifeExpectancy.setText(cats.getMin_life_expectancy() + " - " + cats.getMax_life_expectancy());
+        txtCatWeight.setText(Math.round(cats.getMin_weight()) + " - " + Math.round(cats.getMax_weight()));
+        txtCatLifeExpectancy.setText(Math.round(cats.getMin_life_expectancy()) + " - " + Math.round(cats.getMax_life_expectancy()));
         ratingFamilyFriendly.setRating(cats.getFamily_friendly());
         ratingChildrenFriendly.setRating(cats.getChildren_friendly());
         ratingStrangerFriendly.setRating(cats.getStranger_friendly());
