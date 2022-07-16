@@ -36,8 +36,8 @@
         android:id="@+id/txtCatName"
         app:layout_constraintTop_toBottomOf="@+id/imageCat"
         android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toRightOf="@id/txtLabelName"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -56,8 +56,8 @@
         android:id="@+id/txtCatOrigin"
         app:layout_constraintTop_toBottomOf="@+id/txtCatName"
         android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toRightOf="@id/txtLabelOrigin"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -76,14 +76,14 @@
         android:id="@+id/txtCatLength"
         app:layout_constraintTop_toBottomOf="@+id/txtCatOrigin"
         android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toRightOf="@id/txtLabelLength"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtLabelFamilyFriendly"
-        android:text="Family-friendliness"
+        android:id="@+id/txtLabelWeight"
+        android:text="Weight (pounds)"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/txtLabelLength"
         android:layout_marginTop="10dp"
@@ -93,11 +93,54 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtCatFamilyFriendly"
+        android:id="@+id/txtCatWeight"
         app:layout_constraintTop_toBottomOf="@+id/txtCatLength"
         android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toRightOf="@id/txtLabelFamilyFriendly"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelLifeExpectancy"
+        android:text="Life expectancy"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelWeight"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtCatLifeExpectancy"
+        app:layout_constraintTop_toBottomOf="@+id/txtCatWeight"
+        android:layout_marginTop="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelFamilyFriendly"
+        android:text="Family-friendliness"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelLifeExpectancy"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingFamilyFriendly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/txtCatLifeExpectancy"
+        android:layout_marginTop="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -110,14 +153,201 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginStart="25dp"/>
 
+    <RatingBar
+        android:id="@+id/ratingChildrenFriendly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingFamilyFriendly"
+        android:layout_marginTop="12dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtCatChildFriendly"
-        app:layout_constraintTop_toBottomOf="@+id/txtCatFamilyFriendly"
+        android:id="@+id/txtLabelStrangerFriendly"
+        android:text="Stranger-friendliness"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelChildrenFriendly"
         android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toRightOf="@id/txtLabelChildrenFriendly"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingStrangerFriendly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingChildrenFriendly"
+        android:layout_marginTop="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelOtherPetsFriendly"
+        android:text="Other pets-friendliness"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelStrangerFriendly"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingOtherPetsFriendly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingStrangerFriendly"
+        android:layout_marginTop="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelGeneralHealth"
+        android:text="General health"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelOtherPetsFriendly"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingGeneralHealth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingOtherPetsFriendly"
+        android:layout_marginTop="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelIntelligence"
+        android:text="Intelligence"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelGeneralHealth"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingIntelligence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingGeneralHealth"
+        android:layout_marginTop="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelPlayfulness"
+        android:text="Playfulness"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelIntelligence"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingPlayfulness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingIntelligence"
+        android:layout_marginTop="13dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelMeowing"
+        android:text="Meowing"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelPlayfulness"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingMeowing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingPlayfulness"
+        android:layout_marginTop="12dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelShedding"
+        android:text="Shedding"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelMeowing"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingShedding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingMeowing"
+        android:layout_marginTop="12dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabelGrooming"
+        android:text="Grooming"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabelShedding"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="25dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingGrooming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintTop_toBottomOf="@+id/ratingShedding"
+        android:layout_marginTop="12dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
