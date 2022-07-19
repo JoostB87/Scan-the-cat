@@ -1,7 +1,5 @@
 package com.catapp.scanthecat;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -149,7 +146,7 @@ public class MainActivity extends MenuActivity {
                             break;
                         case 1:
                             //Ga direct naar displaycatresult, geen lijst nodig
-                            Intent intentResult = new Intent(MainActivity.this, DisplayCatResultActivity.class);
+                            Intent intentResult = new Intent(MainActivity.this, DisplayCatGeneralInfoActivity.class);
                             intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intentResult.putExtra("result", cats[0]);
                             getApplicationContext().startActivity(intentResult);

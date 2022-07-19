@@ -1,6 +1,9 @@
 package com.catapp.scanthecat;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
+import java.util.List;
 
 class Cat implements Serializable {
 
@@ -189,5 +192,156 @@ class Cat implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+}
+
+class CatDetail implements Serializable {
+
+    private String name;
+    private Taxonomy taxonomy;
+    private List locations;
+    private Chars characteristics;
+
+    public CatDetail() {
+    }
+
+    public CatDetail(String name, Taxonomy taxonomy, List locations, Chars characteristics) {
+        this.name = name;
+        this.taxonomy = taxonomy;
+        this.locations = locations;
+        this.characteristics = characteristics;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Taxonomy getTaxonomy() {
+        return taxonomy;
+    }
+
+    public void setTaxonomy(Taxonomy taxonomy) {
+        this.taxonomy = taxonomy;
+    }
+
+    public List getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List locations) {
+        this.locations = locations;
+    }
+
+    public Chars getCharacteristics() {
+        return characteristics;
+    }
+
+    public void setCharacteristics(Chars characteristics) {
+        this.characteristics = characteristics;
+    }
+}
+
+class Taxonomy implements Serializable {
+
+    private String kingdom;
+    private String phylum;
+    private String clas;
+    private String order;
+    private String family;
+    private String genus;
+    private String scientific_name;
+
+    public Taxonomy() {
+    }
+
+    public Taxonomy(String kingdom, String phylum, String clas, String order, String family, String genus, String scientific_name) {
+        this.kingdom = kingdom;
+        this.phylum = phylum;
+        this.clas = clas;
+        this.order = order;
+        this.family = family;
+        this.genus = genus;
+        this.scientific_name = scientific_name;
+    }
+
+    public String getKingdom() {
+        return kingdom;
+    }
+
+    public void setKingdom(String kingdom) {
+        this.kingdom = kingdom;
+    }
+
+    public String getPhylum() {
+        return phylum;
+    }
+
+    public void setPhylum(String phylum) {
+        this.phylum = phylum;
+    }
+
+    public String getClas() {
+        return clas;
+    }
+
+    public void setClass(String clas) {
+        clas = clas;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getFamily() {
+        return family;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public String getGenus() {
+        return genus;
+    }
+
+    public void setGenus(String genus) {
+        this.genus = genus;
+    }
+
+    public String getScientific_name() {
+        return scientific_name;
+    }
+
+    public void setScientific_name(String scientific_name) {
+        this.scientific_name = scientific_name;
+    }
+}
+
+class Chars implements Serializable {
+
+    private String slogan;
+    //ToDo add more
+
+    public Chars() {
+    }
+
+    public Chars(String slogan) {
+        this.slogan = slogan;
+    }
+
+    public String getSlogan() {
+        return slogan;
+    }
+
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
     }
 }

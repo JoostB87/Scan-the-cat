@@ -2,7 +2,6 @@ package com.catapp.scanthecat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,7 @@ public class CatResultListRecViewAdapter extends RecyclerView.Adapter<CatResultL
             public void onClick(View view) {
                 int pos = holder.getAbsoluteAdapterPosition();
 
-                Intent intentResult = new Intent(context, DisplayCatResultActivity.class);
+                Intent intentResult = new Intent(context, DisplayCatGeneralInfoActivity.class);
                 intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intentResult.putExtra("result", cats[pos]);
                 context.startActivity(intentResult);

@@ -10,15 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ScanTheCat">
         <activity
-            android:name=".DisplayCatResultActivity"
+            android:name=".DisplayCatDetailInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DisplayCatGeneralInfoActivity"
             android:exported="false" />
         <activity
             android:name=".DisplayCatListActivity"
             android:exported="false" />
         <activity
             android:name=".MenuActivity"
-            android:exported="false" />
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+            android:exported="false" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4788000105337932~2421667441" />
