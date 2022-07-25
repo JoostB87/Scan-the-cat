@@ -148,7 +148,7 @@ public class MainActivity extends MenuActivity {
                             //Ga direct naar displaycatresult, geen lijst nodig
                             Intent intentResult = new Intent(MainActivity.this, DisplayCatGeneralInfoActivity.class);
                             intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intentResult.putExtra("result", cats[0]);
+                            intentResult.putExtra("cats", cats[0]);
                             getApplicationContext().startActivity(intentResult);
                             //https://coderedirect.com/questions/513788/android-asynctask-start-new-activity-in-onpostexecute
 
@@ -157,7 +157,7 @@ public class MainActivity extends MenuActivity {
                             //Meerdere results, dus resultlijst tonen
                             Intent intentResultList = new Intent(MainActivity.this, DisplayCatListActivity.class);
                             intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intentResultList.putExtra("result", cats);
+                            intentResultList.putExtra("cats", cats);
                             getApplicationContext().startActivity(intentResultList);
 
                             break;

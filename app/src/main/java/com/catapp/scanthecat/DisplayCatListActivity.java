@@ -31,7 +31,7 @@ public class DisplayCatListActivity extends MenuActivity {
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-            cats = (Cat[]) extras.get("result");
+            cats = (Cat[]) extras.get("cats");
         }
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {

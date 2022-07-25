@@ -1,5 +1,6 @@
 package com.catapp.scanthecat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,14 +26,16 @@ public class DisplayCatGeneralInfoActivity extends MenuActivity {
     private Cat cats;
     private CatDetail[] catDetail;
     private String myUrl = "https://api.api-ninjas.com/v1/animals?name=";
+    private Button buttonGeneralInfo;
+    private Button buttonDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_cat_general_info);
 
-        Button buttonGeneralInfo = findViewById(R.id.buttonGeneralInfo);
-        Button buttonDetails = findViewById(R.id.buttonDetails);
+        buttonGeneralInfo = findViewById(R.id.buttonGeneralInfo);
+        buttonDetails = findViewById(R.id.buttonDetails);
         ImageView imageCat = findViewById(R.id.imageCat);
         TextView txtCatName = findViewById(R.id.txtCatName);
         TextView txtCatOrigin = findViewById(R.id.txtCatOrigin);
@@ -59,10 +62,11 @@ public class DisplayCatGeneralInfoActivity extends MenuActivity {
         //Bij on click ga je naar details toe, details nog maken.
         //Moeilijk met labels, checken wat er allemaal terug kan komen
         //Bij on click details ook interstitial add tonen
+        //meegeven cats en catdetails in intent bundle (zie hieronder) - string catDetail
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-            cats = (Cat) extras.get("result");
+            cats = (Cat) extras.get("cats");
         }
 
         Glide.with(this)
@@ -162,9 +166,23 @@ public class DisplayCatGeneralInfoActivity extends MenuActivity {
 
                     if (catDetail.length != 0) {
                         if (catDetail[0].getTaxonomy().getGenus().equals("Felis")) {
-                            //ToDo Als er een result is (waarbij het type is cat) -> laat de buttons zien (general info enabled = false, details enabled = true).
+                            buttonGeneralInfo.setVisibility(View.VISIBLE);
+                            buttonGeneralInfo.setEnabled(false);
+                            buttonDetails.setVisibility(View.VISIBLE);
+                            buttonDetails.setEnabled(true);
                         }
                     }
+
+                    buttonDetails.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intentResult = new Intent(DisplayCatGeneralInfoActivity.this, DisplayCatDetailInfoActivity.class);
+                            intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intentResult.putExtra("cats", cats);
+                            intentResult.putExtra("catDetail", catDetail[0]);
+                            getApplicationContext().startActivity(intentResult);
+                        }
+                    });
                 }
             });
         }

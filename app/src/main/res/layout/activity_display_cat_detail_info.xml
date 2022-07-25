@@ -6,4 +6,78 @@
     android:layout_height="match_parent"
     tools:context=".DisplayCatDetailInfoActivity">
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/topButtons">
+
+        <Button
+            android:id="@+id/buttonGeneralInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="General info" />
+
+        <Button
+            android:id="@+id/buttonDetails"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Details" />
+
+    </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adViewDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:layout_constraintLeft_toLeftOf="parent"
+        ads:layout_constraintRight_toRightOf="parent"
+        ads:layout_constraintTop_toBottomOf="@id/topButtons"
+        android:layout_marginTop="5dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-4788000105337932/2544626809">
+    </com.google.android.gms.ads.AdView>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:stretchColumns="1"
+        app:layout_constraintTop_toBottomOf="@id/adViewDetails">
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelName"
+                android:text="Name"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatName"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelKingdom"
+                android:text="Kingdom"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatKingdom"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+    </TableLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

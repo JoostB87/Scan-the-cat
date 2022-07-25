@@ -53,7 +53,7 @@ public class CatResultListRecViewAdapter extends RecyclerView.Adapter<CatResultL
 
                 Intent intentResult = new Intent(context, DisplayCatGeneralInfoActivity.class);
                 intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intentResult.putExtra("result", cats[pos]);
+                intentResult.putExtra("cats", cats[pos]);
                 context.startActivity(intentResult);
             }
         });
