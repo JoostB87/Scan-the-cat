@@ -78,6 +78,90 @@
                 android:layout_marginEnd="10dp"/>
         </TableRow>
 
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelPhylum"
+                android:text="Phylum"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatPhylum"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelClass"
+                android:text="Class"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatClass"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelOrder"
+                android:text="Order"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatOrder"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelFamily"
+                android:text="Family"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatFamily"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelGenus"
+                android:text="Genus"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatGenus"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelScientificName"
+                android:text="Scientific name"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatScientificName"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
     </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
