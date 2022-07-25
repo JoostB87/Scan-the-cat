@@ -39,6 +39,21 @@ public class DisplayCatDetailInfoActivity extends MenuActivity {
         TextView txtCatFamily = findViewById(R.id.txtCatFamily);
         TextView txtCatGenus = findViewById(R.id.txtCatGenus);
         TextView txtCatScientificName = findViewById(R.id.txtCatScientificName);
+        TextView txtCatLocations = findViewById(R.id.txtCatLocations);
+        TextView txtCatDistinctiveFeature = findViewById(R.id.txtCatDistinctiveFeature);
+        TextView txtCatOtherNames = findViewById(R.id.txtCatOtherNames);
+        TextView txtCatTemperament = findViewById(R.id.txtCatTemperament);
+        TextView txtCatTraining = findViewById(R.id.txtCatTraining);
+        TextView txtCatDiet = findViewById(R.id.txtCatDiet);
+        TextView txtCatAverageLitterSize = findViewById(R.id.txtCatAverageLitterSize);
+        TextView txtCatType = findViewById(R.id.txtCatType);
+        TextView txtCatCommonName = findViewById(R.id.txtCatCommonName);
+        TextView txtCatSlogan = findViewById(R.id.txtCatSlogan);
+        TextView txtCatGroup = findViewById(R.id.txtCatGroup);
+        TextView txtCatColor = findViewById(R.id.txtCatColor);
+        TextView txtCatSkinType = findViewById(R.id.txtCatSkinType);
+        TextView txtCatLifespan = findViewById(R.id.txtCatLifespan);
+        TextView txtCatWeight = findViewById(R.id.txtCatWeight);
         Button buttonGeneralInfo = findViewById(R.id.buttonGeneralInfo);
         Button buttonDetails = findViewById(R.id.buttonDetails);
 
@@ -83,6 +98,25 @@ public class DisplayCatDetailInfoActivity extends MenuActivity {
         if (catDetail.getTaxonomy().getFamily() != null) { txtCatFamily.setText(catDetail.getTaxonomy().getFamily()); }
         if (catDetail.getTaxonomy().getGenus() != null) { txtCatGenus.setText(catDetail.getTaxonomy().getGenus()); }
         if (catDetail.getTaxonomy().getScientific_name() != null) { txtCatScientificName.setText(catDetail.getTaxonomy().getScientific_name()); }
-        //ToDo nog rest toevoegen
+        if (catDetail.getLocations() != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                String Locations = String.join(",", catDetail.getLocations());
+                txtCatLocations.setText(Locations);
+            }
+        }
+        if (catDetail.getCharacteristics().getDistinctive_features() != null) { txtCatDistinctiveFeature.setText(catDetail.getCharacteristics().getDistinctive_features()); }
+        if (catDetail.getCharacteristics().getOther_names() != null) { txtCatOtherNames.setText(catDetail.getCharacteristics().getOther_names()); }
+        if (catDetail.getCharacteristics().getTemperament() != null) { txtCatTemperament.setText(catDetail.getCharacteristics().getTemperament()); }
+        if (catDetail.getCharacteristics().getTraining() != null) { txtCatTraining.setText(catDetail.getCharacteristics().getTraining()); }
+        if (catDetail.getCharacteristics().getDiet() != null) { txtCatDiet.setText(catDetail.getCharacteristics().getDiet()); }
+        if (catDetail.getCharacteristics().getAverage_litter_size() != null) { txtCatAverageLitterSize.setText(catDetail.getCharacteristics().getAverage_litter_size()); }
+        if (catDetail.getCharacteristics().getType() != null) { txtCatType.setText(catDetail.getCharacteristics().getType()); }
+        if (catDetail.getCharacteristics().getCommon_name() != null) { txtCatCommonName.setText(catDetail.getCharacteristics().getCommon_name()); }
+        if (catDetail.getCharacteristics().getSlogan() != null) {txtCatSlogan.setText(catDetail.getCharacteristics().getSlogan());}
+        if (catDetail.getCharacteristics().getGroup() != null) {txtCatGroup.setText(catDetail.getCharacteristics().getGroup());}
+        if (catDetail.getCharacteristics().getColor() != null) { txtCatColor.setText(catDetail.getCharacteristics().getColor()); }
+        if (catDetail.getCharacteristics().getSkin_type() != null) {txtCatSkinType.setText(catDetail.getCharacteristics().getSkin_type());}
+        if (catDetail.getCharacteristics().getLifespan() != null) { txtCatLifespan.setText(catDetail.getCharacteristics().getLifespan()); }
+        if (catDetail.getCharacteristics().getWeight() != null) { txtCatWeight.setText(catDetail.getCharacteristics().getWeight()); }
     }
 }

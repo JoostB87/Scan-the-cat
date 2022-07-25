@@ -162,6 +162,216 @@
                 android:layout_marginEnd="10dp"/>
         </TableRow>
 
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelLocations"
+                android:text="Locations"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatLocations"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelDistinctiveFeature"
+                android:text="Distinctive feature"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatDistinctiveFeature"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelOtherNames"
+                android:text="Other name(s)"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatOtherNames"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelTemperament"
+                android:text="Temperament"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatTemperament"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelTraining"
+                android:text="Training"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatTraining"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelDiet"
+                android:text="Diet"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatDiet"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelAverageLitterSize"
+                android:text="Avg litter size"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatAverageLitterSize"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelType"
+                android:text="Type"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatType"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelCommonName"
+                android:text="Common name"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatCommonName"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelSlogan"
+                android:text="Slogan"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatSlogan"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelGroup"
+                android:text="Group"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatGroup"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelColor"
+                android:text="Color"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatColor"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelSkinType"
+                android:text="Skin Type"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatSkinType"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelLifespan"
+                android:text="Lifespan"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatLifespan"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/txtLabelWeight"
+                android:text="Weight"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/txtCatWeight"
+                android:gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
     </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,18 +2,26 @@ package com.catapp.scanthecat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.gson.Gson;
 
 import java.io.InputStream;
@@ -28,6 +36,8 @@ public class DisplayCatGeneralInfoActivity extends MenuActivity {
     private String myUrl = "https://api.api-ninjas.com/v1/animals?name=";
     private Button buttonGeneralInfo;
     private Button buttonDetails;
+    private InterstitialAd mInterstitialAd;
+    private static final String TAG = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +174,52 @@ public class DisplayCatGeneralInfoActivity extends MenuActivity {
                     //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
                     myUrl = "https://api.api-ninjas.com/v1/animals?name=";
 
+                    AdRequest adRequest = new AdRequest.Builder().build();
+
+                    InterstitialAd.load(DisplayCatGeneralInfoActivity.this,"ca-app-pub-4788000105337932/3780443581", adRequest,
+                            new InterstitialAdLoadCallback() {
+                                @Override
+                                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                                    // The mInterstitialAd reference will be null until
+                                    // an ad is loaded.
+                                    mInterstitialAd = interstitialAd;
+
+                                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                                        @Override
+                                        public void onAdDismissedFullScreenContent() {
+                                            // Called when fullscreen content is dismissed.
+                                            goToDetailsPage();
+                                            Log.d("TAG", "The ad was dismissed.");
+                                        }
+
+                                        @Override
+                                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                            // Called when fullscreen content failed to show.
+                                            goToDetailsPage();
+                                            Log.d("TAG", "The ad failed to show.");
+                                        }
+
+                                        @Override
+                                        public void onAdShowedFullScreenContent() {
+                                            // Called when fullscreen content is shown.
+                                            // Make sure to set your reference to null so you don't
+                                            // show it a second time.
+                                            mInterstitialAd = null;
+                                            Log.d("TAG", "The ad was shown.");
+                                        }
+                                    });
+
+                                    Log.i(TAG, "onAdLoaded");
+                                }
+
+                                @Override
+                                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                    // Handle the error
+                                    Log.i(TAG, loadAdError.getMessage());
+                                    mInterstitialAd = null;
+                                }
+                            });
+
                     if (catDetail.length != 0) {
                         if (catDetail[0].getTaxonomy().getGenus().equals("Felis")) {
                             buttonGeneralInfo.setVisibility(View.VISIBLE);
@@ -176,15 +232,24 @@ public class DisplayCatGeneralInfoActivity extends MenuActivity {
                     buttonDetails.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intentResult = new Intent(DisplayCatGeneralInfoActivity.this, DisplayCatDetailInfoActivity.class);
-                            intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intentResult.putExtra("cats", cats);
-                            intentResult.putExtra("catDetail", catDetail[0]);
-                            getApplicationContext().startActivity(intentResult);
+                            if (mInterstitialAd != null) {
+                                mInterstitialAd.show(DisplayCatGeneralInfoActivity.this);
+                            } else {
+                                Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                                goToDetailsPage();
+                            }
                         }
                     });
                 }
             });
         }
+    }
+
+    public void goToDetailsPage() {
+        Intent intentResult = new Intent(DisplayCatGeneralInfoActivity.this, DisplayCatDetailInfoActivity.class);
+        intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intentResult.putExtra("cats", cats);
+        intentResult.putExtra("catDetail", catDetail[0]);
+        getApplicationContext().startActivity(intentResult);
     }
 }
