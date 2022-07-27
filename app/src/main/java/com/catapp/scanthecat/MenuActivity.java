@@ -28,6 +28,11 @@ public class MenuActivity extends AppCompatActivity {
                 searchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(searchIntent);
                 return true;
+            case R.id.menu_catList:
+                Intent catListIntent = new Intent(this, CatFullListActivity.class);
+                catListIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(catListIntent);
+                return true;
             default:
                 Intent defaultIntent = new Intent(this, MainActivity.class);
                 defaultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

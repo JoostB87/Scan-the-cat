@@ -1,25 +1,16 @@
 package com.catapp.scanthecat;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.gson.Gson;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class DisplayCatDetailInfoActivity extends MenuActivity {
 
@@ -114,7 +105,8 @@ public class DisplayCatDetailInfoActivity extends MenuActivity {
         if (catDetail.getCharacteristics().getCommon_name() != null) { txtCatCommonName.setText(catDetail.getCharacteristics().getCommon_name()); }
         if (catDetail.getCharacteristics().getSlogan() != null) {txtCatSlogan.setText(catDetail.getCharacteristics().getSlogan());}
         if (catDetail.getCharacteristics().getGroup() != null) {txtCatGroup.setText(catDetail.getCharacteristics().getGroup());}
-        if (catDetail.getCharacteristics().getColor() != null) { txtCatColor.setText(catDetail.getCharacteristics().getColor()); }
+        if (catDetail.getCharacteristics().getColor() != null && catDetail.getCharacteristics().getColor().length() < 31 )
+        { txtCatColor.setText(catDetail.getCharacteristics().getColor()); }
         if (catDetail.getCharacteristics().getSkin_type() != null) {txtCatSkinType.setText(catDetail.getCharacteristics().getSkin_type());}
         if (catDetail.getCharacteristics().getLifespan() != null) { txtCatLifespan.setText(catDetail.getCharacteristics().getLifespan()); }
         if (catDetail.getCharacteristics().getWeight() != null) { txtCatWeight.setText(catDetail.getCharacteristics().getWeight()); }

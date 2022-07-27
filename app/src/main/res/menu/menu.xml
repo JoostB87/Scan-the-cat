@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_catList"
+        android:icon="@drawable/ic_baseline_list_alt_24"
+        android:title="catList"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_search_menu_24"
         android:title="search"

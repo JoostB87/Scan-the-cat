@@ -1,8 +1,6 @@
 package com.catapp.scanthecat;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -16,9 +14,6 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
 public class DisplayCatListActivity extends MenuActivity {
 
-    private String afkomst;
-    private TextView txtHeaderResults;
-    private RecyclerView catResultRecView;
     private Cat[] cats = null;
 
     @Override
@@ -26,8 +21,7 @@ public class DisplayCatListActivity extends MenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_cat_list);
 
-        catResultRecView = findViewById(R.id.catResultRecView);
-        txtHeaderResults = findViewById(R.id.txtHeaderResults);
+        RecyclerView catResultRecView = findViewById(R.id.catFullListRecView);
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
