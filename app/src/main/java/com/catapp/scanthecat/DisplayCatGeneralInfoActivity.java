@@ -67,13 +67,6 @@ public class DisplayCatGeneralInfoActivity extends MenuActivity {
         buttonGeneralInfo.setVisibility(View.GONE);
         buttonDetails.setVisibility(View.GONE);
 
-        //ToDo doe een call naar animal endpoint. Als geen result is doe niks.
-        //Als er een result is (waarbij het type is cat) -> laat de buttons zien (general info enabled = false, details enabled = true).
-        //Bij on click ga je naar details toe, details nog maken.
-        //Moeilijk met labels, checken wat er allemaal terug kan komen
-        //Bij on click details ook interstitial add tonen
-        //meegeven cats en catdetails in intent bundle (zie hieronder) - string catDetail
-
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             cats = (Cat) extras.get("cats");

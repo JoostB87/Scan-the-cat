@@ -3,7 +3,6 @@ package com.catapp.scanthecat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,8 +11,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.gson.Gson;
 
 import java.io.InputStream;
@@ -37,40 +34,34 @@ public class MainActivity extends MenuActivity {
         ImageView imageCat = findViewById(R.id.imageCat);
         imageCat.setImageResource(R.mipmap.ic_launcher_cat_round);
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        MobileAds.initialize(this, initializationStatus -> {
         });
 
         AdView mAdView = findViewById(R.id.adViewMain);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        searchCatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Haal de waarde op uit het zoekveld
-                String catType = editTextSearchCat.getText().toString();
+        searchCatButton.setOnClickListener(view -> {
+            //Haal de waarde op uit het zoekveld
+            String catType = editTextSearchCat.getText().toString();
 
-                if(catType.equals("")) {
-                    Toast.makeText(MainActivity.this, "No input for search", Toast.LENGTH_SHORT).show();
-                } else if(catType.length() < 3) {
-                    Toast.makeText(MainActivity.this, "At least 3 characters needed for search", Toast.LENGTH_SHORT).show();
-                } else {
-                    //Plak deze achter de API call url en gooi daarna de titel weer leeg (anders problemen met heen en terugnavigeren), anders plakt ie meerdere titels achter elkaar
-                    myUrl = myUrl + catType;
-                    catType = null;
+            if(catType.equals("")) {
+                Toast.makeText(MainActivity.this, "No input for search", Toast.LENGTH_SHORT).show();
+            } else if(catType.length() < 3) {
+                Toast.makeText(MainActivity.this, "At least 3 characters needed for search", Toast.LENGTH_SHORT).show();
+            } else {
+                //Plak deze achter de API call url en gooi daarna de titel weer leeg (anders problemen met heen en terugnavigeren), anders plakt ie meerdere titels achter elkaar
+                myUrl = myUrl + catType;
+                catType = null;
 
-                    showProgressDialog();
+                showProgressDialog();
 
-                    // create object of GetResultsAsync class and execute it
-                    GetResultsAsync getResultsAsync = new GetResultsAsync();
-                    Thread thread = new Thread(getResultsAsync);
-                    thread.start();
-                }
-
+                // create object of GetResultsAsync class and execute it
+                GetResultsAsync getResultsAsync = new GetResultsAsync();
+                Thread thread = new Thread(getResultsAsync);
+                thread.start();
             }
+
         });
     }
 
@@ -126,42 +117,40 @@ public class MainActivity extends MenuActivity {
             }
 
             final String resultCats = result;
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    // do onPostExecute stuff GUI
-                    Gson gson = new Gson();
-                    // Convert JSON File to Java Object
-                    Cat[] cats = gson.fromJson(resultCats, Cat[].class);
+            runOnUiThread(() -> {
+                // do onPostExecute stuff GUI
+                Gson gson = new Gson();
+                // Convert JSON File to Java Object
+                Cat[] cats = gson.fromJson(resultCats, Cat[].class);
 
-                    //check het aantal resultaten
-                    int countResults = cats.length;
-                    // dismiss the progress dialog after receiving data from API
-                    progressDialog.dismiss();
-                    //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
-                    myUrl = "https://api.api-ninjas.com/v1/cats?name=";
+                //check het aantal resultaten
+                int countResults = cats.length;
+                // dismiss the progress dialog after receiving data from API
+                progressDialog.dismiss();
+                //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
+                myUrl = "https://api.api-ninjas.com/v1/cats?name=";
 
-                    switch(countResults) {
-                        case 0:
-                            Toast.makeText(MainActivity.this, "No results", Toast.LENGTH_SHORT).show();
-                            break;
-                        case 1:
-                            //Ga direct naar displaycatresult, geen lijst nodig
-                            Intent intentResult = new Intent(MainActivity.this, DisplayCatGeneralInfoActivity.class);
-                            intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intentResult.putExtra("cats", cats[0]);
-                            getApplicationContext().startActivity(intentResult);
-                            //https://coderedirect.com/questions/513788/android-asynctask-start-new-activity-in-onpostexecute
+                switch(countResults) {
+                    case 0:
+                        Toast.makeText(MainActivity.this, "No results", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        //Ga direct naar displaycatresult, geen lijst nodig
+                        Intent intentResult = new Intent(MainActivity.this, DisplayCatGeneralInfoActivity.class);
+                        intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intentResult.putExtra("cats", cats[0]);
+                        getApplicationContext().startActivity(intentResult);
+                        //https://coderedirect.com/questions/513788/android-asynctask-start-new-activity-in-onpostexecute
 
-                            break;
-                        default:
-                            //Meerdere results, dus resultlijst tonen
-                            Intent intentResultList = new Intent(MainActivity.this, DisplayCatListActivity.class);
-                            intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intentResultList.putExtra("cats", cats);
-                            getApplicationContext().startActivity(intentResultList);
+                        break;
+                    default:
+                        //Meerdere results, dus resultlijst tonen
+                        Intent intentResultList = new Intent(MainActivity.this, DisplayCatListActivity.class);
+                        intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intentResultList.putExtra("cats", cats);
+                        getApplicationContext().startActivity(intentResultList);
 
-                            break;
-                    }
+                        break;
                 }
             });
         }
