@@ -1,13 +1,21 @@
 package com.catapp.scanthecat;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.gson.Gson;
 
 import java.io.InputStream;
@@ -19,6 +27,9 @@ public class DisplayCatGifActivity extends MenuActivity {
 
     private CatGifs[] catGif;
     private ImageView catGifImageview;
+    private InterstitialAd mInterstitialAd;
+    private static final String TAG = null;
+    private Integer advertentieTeller = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +52,63 @@ public class DisplayCatGifActivity extends MenuActivity {
         mAdView.loadAd(adRequest);
 
         btnNextGif.setOnClickListener(view -> {
-            GetResultsAsync getResultsAsync1 = new GetResultsAsync();
-            Thread thread1 = new Thread(getResultsAsync1);
-            thread1.start();
-        });
+            if (advertentieTeller == 10) {
+                advertentieTeller = 0;
 
-        //ToDo Tellertje bijhouden en per x gifs een interstitial tonen
+                InterstitialAd.load(DisplayCatGifActivity.this,"ca-app-pub-4788000105337932/1134292462", adRequest,
+                        new InterstitialAdLoadCallback() {
+                            @Override
+                            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                                // The mInterstitialAd reference will be null until
+                                // an ad is loaded.
+                                mInterstitialAd = interstitialAd;
+
+                                mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                                    @Override
+                                    public void onAdDismissedFullScreenContent() {
+                                        // Called when fullscreen content is dismissed.
+                                        requestNewGif();
+                                        Log.d("TAG", "The ad was dismissed.");
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                        // Called when fullscreen content failed to show.
+                                        requestNewGif();
+                                        Log.d("TAG", "The ad failed to show.");
+                                    }
+
+                                    @Override
+                                    public void onAdShowedFullScreenContent() {
+                                        // Called when fullscreen content is shown.
+                                        // Make sure to set your reference to null so you don't
+                                        // show it a second time.
+                                        mInterstitialAd = null;
+                                        Log.d("TAG", "The ad was shown.");
+                                    }
+                                });
+
+                                Log.i(TAG, "onAdLoaded");
+                            }
+
+                            @Override
+                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                requestNewGif();
+                                // Handle the error
+                                Log.i(TAG, loadAdError.getMessage());
+                                mInterstitialAd = null;
+                            }
+                        });
+            } else {
+                requestNewGif();
+            }
+        });
+    }
+
+    public void requestNewGif() {
+        GetResultsAsync getResultsAsync1 = new GetResultsAsync();
+        Thread thread1 = new Thread(getResultsAsync1);
+        thread1.start();
     }
 
     public class GetResultsAsync implements Runnable {
@@ -104,6 +166,9 @@ public class DisplayCatGifActivity extends MenuActivity {
                         .asGif()
                         .load(catGif[0].getUrl())
                         .into(catGifImageview);
+
+                advertentieTeller ++;
+                System.out.println("De teller staat nu op: " + advertentieTeller);
             });
         }
     }
