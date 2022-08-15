@@ -31,4 +31,107 @@
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>
 
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageViewCat"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitelGame"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="40dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewFoodButton"
+        android:src="@drawable/ic_baseline_restaurant_48"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewLightButton"
+        android:src="@drawable/ic_baseline_lightbulb_48"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewFoodButton"
+        app:layout_constraintRight_toLeftOf="@id/imageViewGameButton"
+        android:layout_marginTop="15dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewGameButton"
+        android:src="@drawable/ic_baseline_sports_football_48"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewLightButton"
+        app:layout_constraintRight_toLeftOf="@+id/imageViewMedicationButton"
+        android:layout_marginTop="15dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewMedicationButton"
+        android:src="@drawable/ic_baseline_medication_48"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewGameButton"
+        app:layout_constraintRight_toLeftOf="@+id/imageViewBathroomButton"
+        android:layout_marginTop="15dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewBathroomButton"
+        android:src="@drawable/ic_baseline_bathtub_48"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewMedicationButton"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewLabelAge"
+        android:text="Age: "
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFoodButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewValueAge"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFoodButton"
+        app:layout_constraintLeft_toRightOf="@+id/textViewLabelAge"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewLabelWeight"
+        android:text="Weight: "
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelAge"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarValueWeight"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="100"
+        android:progress="10"
+        android:progressTint="@color/green"
+        app:layout_constraintTop_toBottomOf="@id/textViewValueAge"
+        app:layout_constraintLeft_toRightOf="@id/textViewLabelWeight"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

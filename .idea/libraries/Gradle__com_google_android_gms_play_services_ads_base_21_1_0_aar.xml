@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-ads-base:21.1.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e6ab1cf2ebf79d3337f28fda13152bce/transformed/jetified-play-services-ads-base-21.1.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e6ab1cf2ebf79d3337f28fda13152bce/transformed/jetified-play-services-ads-base-21.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e6ab1cf2ebf79d3337f28fda13152bce/transformed/jetified-play-services-ads-base-21.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5de98c86a3fa8826c8b2a411ecfccf90/transformed/jetified-play-services-ads-base-21.1.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/a8ba1f52f38d42e0914ebbe78cc29168/transformed/jetified-play-services-ads-base-21.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a8ba1f52f38d42e0914ebbe78cc29168/transformed/jetified-play-services-ads-base-21.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a8ba1f52f38d42e0914ebbe78cc29168/transformed/jetified-play-services-ads-base-21.1.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-ads-base/21.1.0/e30555d01f4b419de1eed6ceed27b98aedecf946/play-services-ads-base-21.1.0-javadoc.jar!/" />
