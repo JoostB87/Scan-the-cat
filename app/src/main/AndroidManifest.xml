@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ScanTheCat">
         <activity
+            android:name=".CatGameActivity"
+            android:exported="false" />
+        <activity
             android:name=".DisplayCatGifActivity"
             android:exported="false" />
         <activity

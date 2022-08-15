@@ -38,6 +38,11 @@ public class MenuActivity extends AppCompatActivity {
                 catGifIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(catGifIntent);
                 return true;
+            case R.id.menu_game:
+                Intent catGameIntent = new Intent(this, CatGameActivity.class);
+                catGameIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(catGameIntent);
+                return true;
             default:
                 Intent defaultIntent = new Intent(this, MainActivity.class);
                 defaultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
