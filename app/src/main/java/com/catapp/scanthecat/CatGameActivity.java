@@ -1,9 +1,7 @@
 package com.catapp.scanthecat;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -18,18 +16,15 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import java.text.ParseException;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 public class CatGameActivity extends MenuActivity {
 
     private SharedPreferences prefGame;
-    private String gameStartDate;
+    private String gameStartDateTime;
     private ImageView imageViewCat;
     private TextView textViewValueAge;
     private ProgressBar progressBarValueWeight;
@@ -75,12 +70,33 @@ public class CatGameActivity extends MenuActivity {
 
         //ToDo voeden, spelen, slapen, medicijnen, poep ruimen (evt later straffen voor slecht gedrag)
         //ToDo leeftijd, gewicht, honger, geluk
+        /*
+        Maaltijd:
+            gezond: +10 voor weight
+            snack: +20 voor weight, +10 voor happy
+            teveel snacks = ziek?
+            honger + 1 ster
+            weiger eten bij volle honger?
+        Spelen:
+            weight: -10
+            happy: + (afhankelijk van resultaat)
+        Ziek:
+            wil niet eten of spelen, moet eerst medicijnen krijgen (1 of 2)
+        Badkamer:
+            flusht alle poep weg
+        Poep:
+            te lang op het scherm -> ziek
+            maximaal 3 stuks
+            Honger -1 ster per poep
+            Poept niet onder het slapen, maar poep van voor die tijd blijft wel liggen en telt door
+            poep elke 3 a 4 uur?
+         */
 
         prefGame = getApplicationContext().getSharedPreferences("prefGame", 0);
-        gameStartDate = prefGame.getString("gameStartDate", "");
+        gameStartDateTime = prefGame.getString("gameStartDateTime", "");
         weight = prefGame.getInt("weight", 50);
 
-        if (gameStartDate.equals("")) {
+        if (gameStartDateTime.equals("")) {
             startNewGame();
         } else {
             //ToDo vul game dingen in, leeftijd, plaatje kitten, gewicht, happy, poep etc.
@@ -127,9 +143,9 @@ public class CatGameActivity extends MenuActivity {
 
         DateTimeFormatter dtf = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-            LocalDate date1 = LocalDate.parse(gameStartDate, dtf);
+            LocalDate date1 = LocalDate.parse(gameStartDateTime, dtf);
             //ToDo hier kun je een beetje mee spelen om wat verschillen te zien
             LocalDate date2 = LocalDate.parse(getCurrentDate(), dtf);
             age = ChronoUnit.DAYS.between(date1, date2);
@@ -145,7 +161,7 @@ public class CatGameActivity extends MenuActivity {
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (!gameStartDate.equals("")) {
+                        if (!gameStartDateTime.equals("")) {
                             //clearen van alle sharedprefs want je gaat een nieuw game beginnen, dus alle variabelen van oude game mogen weg.
                             SharedPreferences.Editor editor = prefGame.edit();
                             editor.clear();
@@ -153,9 +169,9 @@ public class CatGameActivity extends MenuActivity {
                         }
                         //setten van de gameStartDate want je gaat een nieuwe game beginnen
                         SharedPreferences.Editor editor = prefGame.edit();
-                        editor.putString("gameStartDate", getCurrentDate());
+                        editor.putString("gameStartDateTime", getCurrentDate());
                         editor.apply();
-                        gameStartDate = getCurrentDate();
+                        gameStartDateTime = getCurrentDate();
 
                         dialog.dismiss();
 
@@ -173,7 +189,7 @@ public class CatGameActivity extends MenuActivity {
         DateTimeFormatter date = null;
         String currentDate = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            date = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            date = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             LocalDateTime now = null;
             now = LocalDateTime.now();
             currentDate = date.format(now);
