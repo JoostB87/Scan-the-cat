@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".CatGameActivity">
 
     <com.google.android.gms.ads.AdView
@@ -30,108 +30,184 @@
         android:text="Take care of your cat and see it grow old!"
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:id="@+id/relativeLayoutCatScreenGame"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitelGame">
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:id="@+id/imageViewCat"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitelGame"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="40dp" />
+        <ImageView
+            android:id="@+id/imageViewLightsOut"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:src="@mipmap/black_square"/>
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/imageViewCat"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewFoodButton"
         android:src="@drawable/ic_baseline_restaurant_48"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCatScreenGame"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="15dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="20dp"
+        app:tint="@color/grey"
+        android:clickable="true"
+        android:focusable="true" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewLightButton"
         android:src="@drawable/ic_baseline_lightbulb_48"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCatScreenGame"
         app:layout_constraintLeft_toRightOf="@+id/imageViewFoodButton"
         app:layout_constraintRight_toLeftOf="@id/imageViewGameButton"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        app:tint="@color/grey"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewGameButton"
         android:src="@drawable/ic_baseline_sports_football_48"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCatScreenGame"
         app:layout_constraintLeft_toRightOf="@+id/imageViewLightButton"
         app:layout_constraintRight_toLeftOf="@+id/imageViewMedicationButton"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        app:tint="@color/grey"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewMedicationButton"
         android:src="@drawable/ic_baseline_medication_48"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCatScreenGame"
         app:layout_constraintLeft_toRightOf="@+id/imageViewGameButton"
         app:layout_constraintRight_toLeftOf="@+id/imageViewBathroomButton"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        app:tint="@color/grey"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewBathroomButton"
         android:src="@drawable/ic_baseline_bathtub_48"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCat"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutCatScreenGame"
         app:layout_constraintLeft_toRightOf="@+id/imageViewMedicationButton"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"/>
+        android:layout_marginEnd="20dp"
+        app:tint="@color/grey"
+        android:clickable="true"
+        android:focusable="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewLabelAge"
-        android:text="Age: "
+        android:stretchColumns="*"
         app:layout_constraintTop_toBottomOf="@+id/imageViewFoodButton"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginTop="20dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewValueAge"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewFoodButton"
-        app:layout_constraintLeft_toRightOf="@+id/textViewLabelAge"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp" />
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewLabelAge"
+                android:text="Age: "
+                android:layout_marginStart="20dp"
+                android:layout_column="0"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewLabelWeight"
-        android:text="Weight: "
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabelAge"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewValueAge"
+                app:layout_constraintLeft_toRightOf="@+id/textViewLabelAge"
+                android:layout_marginStart="15dp"
+                android:layout_column="0"/>
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBarValueWeight"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:max="100"
-        android:progress="10"
-        android:progressTint="@color/green"
-        app:layout_constraintTop_toBottomOf="@id/textViewValueAge"
-        app:layout_constraintLeft_toRightOf="@id/textViewLabelWeight"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewLabelHungry"
+                android:text="Hungry: "
+                android:layout_marginStart="15dp"
+                android:layout_column="1"/>
 
+            <RelativeLayout
+                android:layout_column="1"
+                android:layout_marginStart="10dp">
+
+                <RatingBar
+                    android:id="@+id/ratingHungry"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:numStars="5"
+                    android:stepSize="1"
+                    app:layout_constraintRight_toRightOf="parent" />
+            </RelativeLayout>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewLabelWeight"
+                android:text="Weight: "
+                app:layout_constraintTop_toBottomOf="@+id/textViewLabelAge"
+                android:layout_marginStart="20dp"
+                android:layout_column="0"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBarValueWeight"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:max="100"
+                android:progress="10"
+                android:progressTint="@color/green"
+                app:layout_constraintLeft_toRightOf="@id/textViewLabelWeight"
+                android:layout_marginStart="15dp"
+                android:layout_column="0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewLabelHappy"
+                android:text="Happy: "
+                android:layout_marginStart="15dp"
+                android:layout_column="1"/>
+
+            <RelativeLayout
+                android:layout_column="1"
+                android:layout_marginStart="10dp">
+
+                <RatingBar
+                    android:id="@+id/ratingHappy"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:numStars="5"
+                    android:stepSize="1"
+                    app:layout_constraintRight_toRightOf="parent" />
+            </RelativeLayout>
+        </TableRow>
+    </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

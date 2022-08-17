@@ -8,8 +8,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -26,6 +28,7 @@ public class CatGameActivity extends MenuActivity {
     private SharedPreferences prefGame;
     private String gameStartDateTime;
     private ImageView imageViewCat;
+    private ImageView imageViewLightsOut;
     private TextView textViewValueAge;
     private ProgressBar progressBarValueWeight;
     private ImageView imageViewFoodButton;
@@ -33,8 +36,13 @@ public class CatGameActivity extends MenuActivity {
     private ImageView imageViewGameButton;
     private ImageView imageViewMedicationButton;
     private ImageView imageViewBathroomButton;
+    private RatingBar ratingHungry;
+    private RatingBar ratingHappy;
     private Long age;
     private Integer weight;
+    private Integer happy;
+    private Integer hungry;
+    private Boolean lightsOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +57,11 @@ public class CatGameActivity extends MenuActivity {
         mAdView.loadAd(adRequest);
 
         imageViewCat = findViewById(R.id.imageViewCat);
+        imageViewLightsOut = findViewById(R.id.imageViewLightsOut);
         textViewValueAge = findViewById(R.id.textViewValueAge);
         progressBarValueWeight = findViewById(R.id.progressBarValueWeight);
+        ratingHungry = findViewById(R.id.ratingHungry);
+        ratingHappy = findViewById(R.id.ratingHappy);
         imageViewFoodButton = findViewById(R.id.imageViewFoodButton);
         imageViewLightButton = findViewById(R.id.imageViewLightButton);
         imageViewGameButton = findViewById(R.id.imageViewGameButton);
@@ -78,8 +89,9 @@ public class CatGameActivity extends MenuActivity {
             honger + 1 ster
             weiger eten bij volle honger?
         Spelen:
-            weight: -10
-            happy: + (afhankelijk van resultaat)
+            weight: -10, maar kan niet onder de 50 komen
+            happy: spel is altijd 5 rondes, als speler 3 of meer wint -> + 1 happy
+            happy kan nooit meer worden dan 5
         Ziek:
             wil niet eten of spelen, moet eerst medicijnen krijgen (1 of 2)
         Badkamer:
@@ -90,19 +102,118 @@ public class CatGameActivity extends MenuActivity {
             Honger -1 ster per poep
             Poept niet onder het slapen, maar poep van voor die tijd blijft wel liggen en telt door
             poep elke 3 a 4 uur?
+         Licht:
+            Doet het licht uit. (invisible zetten van imageViewLightsOut)
+            wijzig de tint van de imageview van lichtknop (geel is aan, zwart is uit)
+            sla op in sharedprefs of licht aan of uit is achtergelaten.
+            Als licht niet uit is gedaan wordt kat op rare tijden wakker,
+            als licht uit is wordt kat altijd rond dezelfde tijd wakker (ongeveer)
+            Als licht niet uit is kan kat ziek worden of dood gaan zelfs
          */
 
-        prefGame = getApplicationContext().getSharedPreferences("prefGame", 0);
-        gameStartDateTime = prefGame.getString("gameStartDateTime", "");
-        weight = prefGame.getInt("weight", 50);
+        getFromSharedPreferences();
 
         if (gameStartDateTime.equals("")) {
             startNewGame();
         } else {
-            //ToDo vul game dingen in, leeftijd, plaatje kitten, gewicht, happy, poep etc.
-            calculateAge();
-            showAgeAndProperCatImage();
-            showWeight();
+            gameExists();
+        }
+
+        imageViewLightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (lightsOn) {
+                    //als de lampen aan waren gaan ze uit
+                    lightsOn = false;
+                } else {
+                    //en anders gaan ze aan
+                    lightsOn = true;
+                }
+                //setten de nieuwe waarde van lightsOn in sharedprefs zodat je dit kunt gaan gebruiken
+                SharedPreferences.Editor editor = prefGame.edit();
+                editor.putBoolean("lightsOn", lightsOn);
+                editor.apply();
+
+                //pas alles op het scherm aan volgens de nieuwe waarde
+                showLightsBasedOnSharedPrefs();
+            }
+        });
+    }
+
+    public void getFromSharedPreferences() {
+        prefGame = getApplicationContext().getSharedPreferences("prefGame", 0);
+        gameStartDateTime = prefGame.getString("gameStartDateTime", "");
+        weight = prefGame.getInt("weight", 50);
+        hungry = prefGame.getInt("hungry", 5);
+        happy = prefGame.getInt("happy", 5);
+        lightsOn = prefGame.getBoolean("lightsOn", true);
+
+        //ToDo hier toevoegen laatste datumtijd voeden bijv.
+        //ToDo dan kun je op basis van verschil tussen die en currentdatetime bepalen hoeveel sterren er af moeten of hoeveel er gepoept is etc
+    }
+
+    public void gameExists() {
+        //ToDo vul game dingen in, leeftijd, plaatje kitten, gewicht, happy, poep etc.
+        calculateAge();
+        showAgeAndProperCatImage();
+        showWeight();
+        showHungry();
+        showHappy();
+        sleeping();
+        showLightsBasedOnSharedPrefs();
+    }
+
+    public void sleeping() {
+
+    }
+
+    public void showLightsBasedOnSharedPrefs() {
+        //Huidige waarde ophalen uit sharedPrefs
+        lightsOn = prefGame.getBoolean("lightsOn", true);
+
+        if (lightsOn == true) {
+            imageViewLightsOut.setVisibility(View.GONE);
+            imageViewLightButton.setColorFilter(Color.parseColor("#FFEA00"),
+                    PorterDuff.Mode.SRC_ATOP);
+        } else {
+            imageViewLightsOut.setVisibility(View.VISIBLE);
+            imageViewLightButton.setColorFilter(Color.parseColor("#63666A"),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
+
+    }
+
+    public void showHappy() {
+        ratingHappy.setRating(happy);
+        if (happy >= 4) {
+            //Green
+            ratingHappy.getProgressDrawable().setColorFilter(Color.parseColor("#008000"),
+                    PorterDuff.Mode.SRC_ATOP);
+        } else if (happy.equals(2) || happy.equals(3)) {
+            //Orange
+            ratingHappy.getProgressDrawable().setColorFilter(Color.parseColor("#FFA500"),
+                    PorterDuff.Mode.SRC_ATOP);
+        } else {
+            //Red
+            ratingHappy.getProgressDrawable().setColorFilter(Color.parseColor("#EE4B2B"),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    public void showHungry() {
+        ratingHungry.setRating(hungry);
+        if (hungry >= 4) {
+            //Green
+            ratingHungry.getProgressDrawable().setColorFilter(Color.parseColor("#008000"),
+                    PorterDuff.Mode.SRC_ATOP);
+        } else if (hungry.equals(2) || hungry.equals(3)) {
+            //Orange
+            ratingHungry.getProgressDrawable().setColorFilter(Color.parseColor("#FFA500"),
+                    PorterDuff.Mode.SRC_ATOP);
+        } else {
+            //Red
+            ratingHungry.getProgressDrawable().setColorFilter(Color.parseColor("#EE4B2B"),
+                    PorterDuff.Mode.SRC_ATOP);
         }
     }
 
@@ -175,10 +286,8 @@ public class CatGameActivity extends MenuActivity {
 
                         dialog.dismiss();
 
-                        /*ToDo van alles gaan tonen op het scherm
-                            - Denk aan plaatje kitten
-                            - Leeftijd etc invullen
-                         */
+                        //Hier gaat 'ie ook verder wanneer er al een bestaande game is
+                        gameExists();
                     }
                 });
         alertDialog.show();
