@@ -2,6 +2,7 @@ package com.catapp.scanthecat;
 
 import androidx.appcompat.app.AlertDialog;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -24,6 +26,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class CatGameActivity extends MenuActivity {
 
@@ -49,6 +52,17 @@ public class CatGameActivity extends MenuActivity {
     private String sleepingEndTime;
     private ImageView imageViewZzzz;
     private Boolean sleepingBool;
+    private String laatsteDatumTijdPoep;
+    private Integer aantalPoepOpScherm;
+    private ImageView imageViewPoep1;
+    private ImageView imageViewPoep2;
+    private ImageView imageViewPoep3;
+    private ImageView imageViewPoep4;
+    private ImageView imageViewMedication;
+    private ImageView imageViewDead;
+    private String isZiekDateTime;
+    private ImageView foodChoiceHealthy;
+    private ImageView foodChoiceSnack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,17 +88,18 @@ public class CatGameActivity extends MenuActivity {
         imageViewMedicationButton = findViewById(R.id.imageViewMedicationButton);
         imageViewBathroomButton = findViewById(R.id.imageViewBathroomButton);
         imageViewZzzz = findViewById(R.id.imageViewZzzz);
+        imageViewPoep1 = findViewById(R.id.imageViewPoep1);
+        imageViewPoep2 = findViewById(R.id.imageViewPoep2);
+        imageViewPoep3 = findViewById(R.id.imageViewPoep3);
+        imageViewPoep4 = findViewById(R.id.imageViewPoep4);
+        imageViewMedication = findViewById(R.id.imageViewMedication);
+        imageViewDead = findViewById(R.id.imageViewDead);
 
-        /*ToDo van alles gaan tonen op het scherm. Schermpje, met alle knoppen bijv.
-        - ImageView voor poep (2) en ziek zijn teken (1)
-        - Nog open: discipline en attention (geen knop)
-        */
-
-        //ToDo nadenken over interstitial, op welk moment in game? Misschien altijd als er medicatie wordt gegeven ofzo
+        //ToDo nadenken over interstitial, op welk moment in game? Misschien altijd als er medicatie wordt gegeven ofzo, of poepflush
         /*
         Maaltijd:
             gezond: +10 voor weight
-            snack: +20 voor weight, +10 voor happy
+            snack: +20 voor weight, +1 voor happy
             teveel snacks = ziek?
             honger + 1 ster
             weiger eten bij volle honger?
@@ -94,27 +109,7 @@ public class CatGameActivity extends MenuActivity {
             happy kan nooit meer worden dan 5
         Ziek:
             wil niet eten of spelen, moet eerst medicijnen krijgen (1 of 2)
-            Bij 1 poep kans van 1 op 10 op ziek worden
-            bij 2 poep kans van 1 op 5 op ziek worden
-            bij 3 poep kans van 1 op 3 op ziek worden
-            bij 4 poep kans van 1 op 2 op ziek worden
-            bij langer dan x uur ziek zijn -> dood
-        Badkamer:
-            flusht alle poep weg
-        Poep:
-            te lang op het scherm -> ziek
-            happy -1 bij poep lang op scherm
-            maximaal 4 stuks
-            Honger -1 ster per poep
-            Poept niet onder het slapen, maar poep van voor die tijd blijft wel liggen en telt door
-            poep elke 3 a 4 uur?
-         Licht:
-            Doet het licht uit. (invisible zetten van imageViewLightsOut)
-            wijzig de tint van de imageview van lichtknop (geel is aan, zwart is uit)
-            sla op in sharedprefs of licht aan of uit is achtergelaten.
-            Als licht niet uit is gedaan wordt kat op rare tijden wakker,
-            als licht uit is wordt kat altijd rond dezelfde tijd wakker (ongeveer)
-            Als licht niet uit is kan kat ziek worden of dood gaan zelfs
+         !Discipline en attention
          */
 
         getFromSharedPreferences();
@@ -140,6 +135,71 @@ public class CatGameActivity extends MenuActivity {
                 stuffThatNeedsRefreshing();
             }
         });
+
+        imageViewBathroomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
+                if (aantalPoepOpScherm > 0) {
+                    cleanUpPoop();
+                } else {
+                    Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        imageViewMedicationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isZiekDateTime.equals("")) {
+                    feedMedication();
+                } else {
+                    Toast.makeText(CatGameActivity.this, "Cat is not sick, no need for medication!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        if (isZiekDateTime.equals("")) {
+            //Todo wat als ie wel ziek is, nog wat tonen?
+            imageViewFoodButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println("HIER NOG WEL ");
+                    final Dialog foodDialog = new Dialog(CatGameActivity.this, R.style.Dialog);
+                    foodDialog.setContentView(R.layout.foodchoice);
+                    foodDialog.setTitle("Feed your cat");
+                    foodDialog.setCanceledOnTouchOutside(true);
+                    foodDialog.show();
+
+                    foodChoiceHealthy = foodDialog.findViewById(R.id.foodChoiceHealthy);
+                    foodChoiceSnack = foodDialog.findViewById(R.id.foodChoiceSnack);
+
+                    foodChoiceHealthy.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            System.out.println("HEALTHY");
+                            foodDialog.dismiss();
+                            //ToDo dingen doen
+                            //haal weight en honger op uit shared prefs
+                            //doe weight +10 en honger +1 sla weer op in sharedPrefs
+                            //mag niet boven de 100? dood
+                        }
+                    });
+
+                    foodChoiceSnack.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            System.out.println("SNACK");
+                            foodDialog.dismiss();
+                            //Todo dingen doen
+                            //haal weight, honger en happy op uit shared prefs (kan misschien ook 1 x boven de onclicks healthy + snacks
+                            //doe weight +20 , honger +1 en happy + 1 en sla weer op in shared prefs
+                            //honger en happy niet boven de 5
+                        }
+                    });
+                }
+            });
+        }
     }
 
     public void getFromSharedPreferences() {
@@ -151,13 +211,12 @@ public class CatGameActivity extends MenuActivity {
         lightsOn = prefGame.getBoolean("lightsOn", true);
         sleepingStartTime = prefGame.getString("sleepingStartTime", "22:43");
         sleepingEndTime = prefGame.getString("sleepingEndTime", "07:34");
-
-        //ToDo hier toevoegen laatste datumtijd voeden bijv.
-        //ToDo dan kun je op basis van verschil tussen die en currentdatetime bepalen hoeveel sterren er af moeten of hoeveel er gepoept is etc
+        laatsteDatumTijdPoep = prefGame.getString("laatsteDatumTijdPoep", getCurrentDateTime());
+        aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
     }
 
     public void gameExists() {
-        //ToDo vul game dingen in, leeftijd, plaatje kitten, gewicht, happy, poep etc.
+        hideImageViews();
         calculateAge();
         showAgeAndProperCatImage();
         showWeightBasedOnSharedPrefs();
@@ -168,25 +227,218 @@ public class CatGameActivity extends MenuActivity {
     }
 
     public void stuffThatNeedsRefreshing() {
-        //ToDo voeg alle methoden toe die regelmatig gechecked moeten worden zodat je die overal zo kunt plakken
         sleeping();
+        showPoopFunction();
+        showCatSickBecauseOfPoop();
+        checkCatIsSickLength();
+    }
+
+    public void cleanUpPoop() {
+        aantalPoepOpScherm = 0;
+        //setten van de aantalPoep in sharedprefs
+        SharedPreferences.Editor editor = prefGame.edit();
+        editor.putInt("aantalPoepOpScherm", 0);
+        editor.apply();
+
+        //zet alle imageviews van poep op niet visible
+        imageViewPoep1.setVisibility(View.GONE);
+        imageViewPoep2.setVisibility(View.GONE);
+        imageViewPoep3.setVisibility(View.GONE);
+        imageViewPoep4.setVisibility(View.GONE);
+    }
+
+    public void adjustHappyMeter(Integer aanpassing) {
+        //haal uit shared prefs happy score
+        happy = prefGame.getInt("happy", 5);
+
+        Integer nieuweHappyScore = happy + aanpassing;
+
+        if (nieuweHappyScore <= 0) {
+            catIsDead();
+        } else {
+            //zet score terug in shared prefs en doe update meters
+            SharedPreferences.Editor editor = prefGame.edit();
+            editor.putInt("happy", nieuweHappyScore);
+            editor.apply();
+
+            showHappyBasedOnSharedPrefs();
+        }
+    }
+
+    public void adjustHungryMeter(Integer aanpassing) {
+        //haal uit shared prefs hungry score
+        hungry = prefGame.getInt("hungry", 5);
+
+        Integer nieuweHungryScore = hungry + aanpassing;
+
+        if (nieuweHungryScore <= 0) {
+            catIsDead();
+        } else {
+            //zet score terug in shared prefs en doe update meters
+            SharedPreferences.Editor editor = prefGame.edit();
+            editor.putInt("hungry", nieuweHungryScore);
+            editor.apply();
+
+            showHungryBasedOnSharedPrefs();
+        }
+    }
+
+    public Integer generateRandomNumber(Integer upperbound) {
+        Random rand = new Random(); //instance of random class
+        //generate random values from 0-upperbound
+        int randomNumber = rand.nextInt(upperbound);
+        return randomNumber;
+    }
+
+    public void showCatSickBecauseOfPoop() {
+        //haal aantalPoep uit shared prefs
+        aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
+
+        if (aantalPoepOpScherm == 1) {
+            if (generateRandomNumber(10).equals(5)) {
+                setCatIsSick();
+            }
+        } else if (aantalPoepOpScherm == 2) {
+            if (generateRandomNumber(5).equals(3)) {
+                setCatIsSick();
+            }
+        } else if (aantalPoepOpScherm == 3) {
+            if (generateRandomNumber(3).equals(1)) {
+                setCatIsSick();
+            }
+        } else if (aantalPoepOpScherm == 4) {
+            if (generateRandomNumber(2).equals(1)) {
+                setCatIsSick();
+            }
+        }
+    }
+
+    public void setCatIsSick() {
+        //setten van de isZiekDateTime in sharedprefs
+        SharedPreferences.Editor editor = prefGame.edit();
+        editor.putString("isZiekDateTime", getCurrentDateTime());
+        editor.apply();
+
+        imageViewMedication.setVisibility(View.VISIBLE);
+
+        //haal 1 van de happymeter af, want ziek
+        adjustHappyMeter(-1);
+    }
+
+    public void checkCatIsSickLength() {
+        //haal uit shared prefs
+        isZiekDateTime = prefGame.getString("isZiekDateTime", "");
+
+        //Todo kat wil niet eten of spelen als ziek is (kleurtje weergeven op medicijnen en blokkeren knoppen eten of spelen)
+        if (!isZiekDateTime.equals("")) {
+            DateTimeFormatter dtf = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                LocalDateTime ziekSinds = LocalDateTime.parse(isZiekDateTime, dtf);
+                LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), dtf);
+
+                Long duurZiekte = ChronoUnit.HOURS.between(ziekSinds, nu);
+                if(duurZiekte > 8) {
+                    catIsDead();
+                }
+            }
+        }
+    }
+
+    public void feedMedication() {
+        //setten van de isZiekDateTime in sharedprefs
+        SharedPreferences.Editor editor = prefGame.edit();
+        editor.putString("isZiekDateTime", "");
+        editor.apply();
+
+        imageViewMedication.setVisibility(View.GONE);
+    }
+
+    public void catIsDead() {
+        imageViewCat.setVisibility(View.GONE);
+        imageViewPoep1.setVisibility(View.GONE);
+        imageViewPoep2.setVisibility(View.GONE);
+        imageViewPoep3.setVisibility(View.GONE);
+        imageViewPoep4.setVisibility(View.GONE);
+        imageViewLightsOut.setVisibility(View.GONE);
+        imageViewMedication.setVisibility(View.GONE);
+        imageViewDead.setVisibility(View.VISIBLE);
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //Popup voor nieuw spel tonen
+        startNewGame();
     }
 
     public void showPoopFunction() {
-        /*
-        ToDo poepdingen
-        laatsteDatumTijdVanPoep (in sharedprefs) - Als die er nog niet is gebruik je startDatumTijdGame
-        je hebt currentdate.
-        Als currentdate ligt na laatsteDatumTijdVanPoep kun je verschil in uren uitrekenen.
+        System.out.println("laatsteDatumTijdVanPoep: " + laatsteDatumTijdPoep);
+        System.out.println("currentDateTime: " + getCurrentDateTime());
 
-        Ingewikkelde vorm: Randomizer datum tijd. En die opslaan per poep (1 t/m 4 + boolean poep(nummer)OpSchermGetoond)
+        //Huidige waarde ophalen uit sharedPrefs
+        aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
+        laatsteDatumTijdPoep = prefGame.getString("laatsteDatumTijdPoep", getCurrentDateTime());
 
-        Wanneer je een poepflush doet laat je de laatsteDatumTijdVanPoep wel staan (eventueel gooi je de poepDatumTijdPerPoep wel leeg
-        en de poep(nummer)OpSchermGetoond ook).
+        DateTimeFormatter dtf = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            LocalDateTime laatstePoep = LocalDateTime.parse(laatsteDatumTijdPoep, dtf);
+            LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), dtf);
+            /*
+            ToDo hier doen we nog even niks mee. Niet poepen tijdens slaap komt nog.
+            LocalDateTime slaapStartTijd = nu.withHour(22).withMinute(30);
+            LocalDateTime slaapEindTijd = nu.withHour(7).withMinute(30);
+            if (laatstePoep.isBefore(nu)) {
+            }
+             */
+            Long verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu);
+            Integer aantalNieuwePoep = (int) (verschilLaatstePoepEnNu / 3.5);
+            System.out.println("aantalPoep: " + aantalNieuwePoep);
+            System.out.println("Verschil: " + verschilLaatstePoepEnNu);
 
-        Bij poep 1 -> na 15 minuten niet geflushed = -1 happy
-        Na poep 1 wordt per direct minder happ
-         */
+            Integer totaalPoep = aantalPoepOpScherm + aantalNieuwePoep;
+
+            if (totaalPoep > 4) {
+                //dan ben je dood, hide alles op het scherm en toon de grafheuvel
+                catIsDead();
+            } else {
+                setPoepOpScherm(totaalPoep);
+
+                //setten van de aantalPoep in sharedprefs
+                SharedPreferences.Editor editor = prefGame.edit();
+                editor.putInt("aantalPoepOpScherm", totaalPoep);
+                if (aantalNieuwePoep > 0) {
+                    editor.putString("laatsteDatumTijdPoep", getCurrentDateTime());
+                }
+                editor.apply();
+            }
+            adjustHappyMeter(-aantalNieuwePoep);
+            adjustHungryMeter(-aantalNieuwePoep);
+        }
+    }
+
+    public void setPoepOpScherm(Integer totaalPoep) {
+        if (totaalPoep == 0) {
+            imageViewPoep1.setVisibility(View.GONE);
+            imageViewPoep2.setVisibility(View.GONE);
+            imageViewPoep3.setVisibility(View.GONE);
+            imageViewPoep4.setVisibility(View.GONE);
+        } else if (totaalPoep == 1) {
+            imageViewPoep1.setVisibility(View.VISIBLE);
+        } else if (totaalPoep == 2) {
+            imageViewPoep1.setVisibility(View.VISIBLE);
+            imageViewPoep2.setVisibility(View.VISIBLE);
+        } else if (totaalPoep == 3) {
+            imageViewPoep1.setVisibility(View.VISIBLE);
+            imageViewPoep2.setVisibility(View.VISIBLE);
+            imageViewPoep3.setVisibility(View.VISIBLE);
+        } else if (totaalPoep == 4) {
+            imageViewPoep1.setVisibility(View.VISIBLE);
+            imageViewPoep2.setVisibility(View.VISIBLE);
+            imageViewPoep3.setVisibility(View.VISIBLE);
+            imageViewPoep4.setVisibility(View.VISIBLE);
+        }
     }
 
     public void setSleepingStartTime() {
@@ -326,7 +578,7 @@ public class CatGameActivity extends MenuActivity {
 
     public void showAgeAndProperCatImage() {
         textViewValueAge.setText(String.valueOf(age));
-
+        imageViewCat.setVisibility(View.VISIBLE);
         if (age <= 7) {
             System.out.println("SHOW KITTEN");
             imageViewCat.setImageResource(R.mipmap.kitten_image);
@@ -337,6 +589,17 @@ public class CatGameActivity extends MenuActivity {
             System.out.println("SHOW OLD CAT");
             imageViewCat.setImageResource(R.mipmap.old_cat_image);
         }
+    }
+
+    public void hideImageViews() {
+        imageViewCat.setVisibility(View.GONE);
+        imageViewPoep1.setVisibility(View.GONE);
+        imageViewPoep2.setVisibility(View.GONE);
+        imageViewPoep3.setVisibility(View.GONE);
+        imageViewPoep4.setVisibility(View.GONE);
+        imageViewLightsOut.setVisibility(View.GONE);
+        imageViewMedication.setVisibility(View.GONE);
+        imageViewDead.setVisibility(View.GONE);
     }
 
     public Long calculateAge() {
@@ -375,6 +638,8 @@ public class CatGameActivity extends MenuActivity {
 
                         setSleepingStartTime();
                         setSleepingEndTime();
+
+                        hideImageViews();
 
                         dialog.dismiss();
 
