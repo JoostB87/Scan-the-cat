@@ -20,8 +20,10 @@ import com.google.android.gms.ads.MobileAds;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Random;
 
 public class CatGameActivity extends MenuActivity {
 
@@ -43,6 +45,10 @@ public class CatGameActivity extends MenuActivity {
     private Integer happy;
     private Integer hungry;
     private Boolean lightsOn;
+    private String sleepingStartTime;
+    private String sleepingEndTime;
+    private ImageView imageViewZzzz;
+    private Boolean sleepingBool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +73,14 @@ public class CatGameActivity extends MenuActivity {
         imageViewGameButton = findViewById(R.id.imageViewGameButton);
         imageViewMedicationButton = findViewById(R.id.imageViewMedicationButton);
         imageViewBathroomButton = findViewById(R.id.imageViewBathroomButton);
+        imageViewZzzz = findViewById(R.id.imageViewZzzz);
 
         /*ToDo van alles gaan tonen op het scherm. Schermpje, met alle knoppen bijv.
-        Tonen van plaatje kitten etc, dat doe je dan later. De invulling.
-        - ImageView voor kat
         - ImageView voor poep (2) en ziek zijn teken (1)
-        - Links knopjes voor: voedsel, licht, spelletje, medicijnen, badkamer
         - Nog open: discipline en attention (geen knop)
-        - TextLabel en view voor leeftijd, gewicht (balkje?), honger, happy
         */
 
         //ToDo nadenken over interstitial, op welk moment in game? Misschien altijd als er medicatie wordt gegeven ofzo
-
-        //ToDo voeden, spelen, slapen, medicijnen, poep ruimen (evt later straffen voor slecht gedrag)
-        //ToDo leeftijd, gewicht, honger, geluk
         /*
         Maaltijd:
             gezond: +10 voor weight
@@ -94,11 +94,17 @@ public class CatGameActivity extends MenuActivity {
             happy kan nooit meer worden dan 5
         Ziek:
             wil niet eten of spelen, moet eerst medicijnen krijgen (1 of 2)
+            Bij 1 poep kans van 1 op 10 op ziek worden
+            bij 2 poep kans van 1 op 5 op ziek worden
+            bij 3 poep kans van 1 op 3 op ziek worden
+            bij 4 poep kans van 1 op 2 op ziek worden
+            bij langer dan x uur ziek zijn -> dood
         Badkamer:
             flusht alle poep weg
         Poep:
             te lang op het scherm -> ziek
-            maximaal 3 stuks
+            happy -1 bij poep lang op scherm
+            maximaal 4 stuks
             Honger -1 ster per poep
             Poept niet onder het slapen, maar poep van voor die tijd blijft wel liggen en telt door
             poep elke 3 a 4 uur?
@@ -124,18 +130,14 @@ public class CatGameActivity extends MenuActivity {
             public void onClick(View view) {
                 if (lightsOn) {
                     //als de lampen aan waren gaan ze uit
-                    lightsOn = false;
+                    setLightsOn(false);
                 } else {
                     //en anders gaan ze aan
-                    lightsOn = true;
+                    setLightsOn(true);
                 }
-                //setten de nieuwe waarde van lightsOn in sharedprefs zodat je dit kunt gaan gebruiken
-                SharedPreferences.Editor editor = prefGame.edit();
-                editor.putBoolean("lightsOn", lightsOn);
-                editor.apply();
-
                 //pas alles op het scherm aan volgens de nieuwe waarde
                 showLightsBasedOnSharedPrefs();
+                stuffThatNeedsRefreshing();
             }
         });
     }
@@ -147,6 +149,8 @@ public class CatGameActivity extends MenuActivity {
         hungry = prefGame.getInt("hungry", 5);
         happy = prefGame.getInt("happy", 5);
         lightsOn = prefGame.getBoolean("lightsOn", true);
+        sleepingStartTime = prefGame.getString("sleepingStartTime", "22:43");
+        sleepingEndTime = prefGame.getString("sleepingEndTime", "07:34");
 
         //ToDo hier toevoegen laatste datumtijd voeden bijv.
         //ToDo dan kun je op basis van verschil tussen die en currentdatetime bepalen hoeveel sterren er af moeten of hoeveel er gepoept is etc
@@ -156,15 +160,93 @@ public class CatGameActivity extends MenuActivity {
         //ToDo vul game dingen in, leeftijd, plaatje kitten, gewicht, happy, poep etc.
         calculateAge();
         showAgeAndProperCatImage();
-        showWeight();
-        showHungry();
-        showHappy();
-        sleeping();
+        showWeightBasedOnSharedPrefs();
+        showHungryBasedOnSharedPrefs();
+        showHappyBasedOnSharedPrefs();
+        stuffThatNeedsRefreshing();
         showLightsBasedOnSharedPrefs();
     }
 
-    public void sleeping() {
+    public void stuffThatNeedsRefreshing() {
+        //ToDo voeg alle methoden toe die regelmatig gechecked moeten worden zodat je die overal zo kunt plakken
+        sleeping();
+    }
 
+    public void showPoopFunction() {
+        /*
+        ToDo poepdingen
+        laatsteDatumTijdVanPoep (in sharedprefs) - Als die er nog niet is gebruik je startDatumTijdGame
+        je hebt currentdate.
+        Als currentdate ligt na laatsteDatumTijdVanPoep kun je verschil in uren uitrekenen.
+
+        Ingewikkelde vorm: Randomizer datum tijd. En die opslaan per poep (1 t/m 4 + boolean poep(nummer)OpSchermGetoond)
+
+        Wanneer je een poepflush doet laat je de laatsteDatumTijdVanPoep wel staan (eventueel gooi je de poepDatumTijdPerPoep wel leeg
+        en de poep(nummer)OpSchermGetoond ook).
+
+        Bij poep 1 -> na 15 minuten niet geflushed = -1 happy
+        Na poep 1 wordt per direct minder happ
+         */
+    }
+
+    public void setSleepingStartTime() {
+        Random r = new Random();
+        int low = 30;
+        int high = 60;
+        int randomSleepingMinutes = r.nextInt(high-low) + low;
+        sleepingStartTime = "22:" + randomSleepingMinutes;
+
+        //setten van de sleepingStartTime, eenmalig bij start game
+        SharedPreferences.Editor editor = prefGame.edit();
+        editor.putString("sleepingStartTime", sleepingStartTime);
+        editor.apply();
+
+        System.out.println("STARTTIJD: " + sleepingStartTime);
+    }
+
+    public void setSleepingEndTime() {
+        Random r = new Random();
+        int low = 30;
+        int high = 60;
+        int randomSleepingMinutes = r.nextInt(high-low) + low;
+        sleepingEndTime = "07:" + randomSleepingMinutes;
+
+        //setten van de sleepingEndTime, eenmalig bij start game
+        SharedPreferences.Editor editor = prefGame.edit();
+        editor.putString("sleepingEndTime", sleepingEndTime);
+        editor.apply();
+
+        System.out.println("EINDTIJD: " + sleepingEndTime);
+    }
+
+    public Boolean sleeping() {
+        System.out.println("SleepingStartTime: " + sleepingStartTime);
+        System.out.println("SleepingEndTime: " + sleepingEndTime);
+        DateTimeFormatter dtf = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dtf = DateTimeFormatter.ofPattern("HH:mm");
+            LocalTime starttijdSlapen = LocalTime.parse(sleepingStartTime, dtf);
+            LocalTime eindtijdSlapen = LocalTime.parse(sleepingEndTime, dtf);
+            LocalTime currentTime = LocalTime.parse(getCurrentTime(), dtf);
+            if (currentTime.isBefore(starttijdSlapen) && eindtijdSlapen.isBefore(currentTime)) {
+                imageViewZzzz.setVisibility(View.GONE);
+                sleepingBool = false;
+                //ToDo nog iets doen met verlichting. Gaat automatisch aan bij wakker worden, maar dat mag maar 1x gebeuren
+            } else {
+                imageViewZzzz.setVisibility(View.VISIBLE);
+                sleepingBool = true;
+            }
+        }
+        return sleepingBool;
+        //ToDo Afhankelijk van licht aan of uit tijdens slapen wordt eerder wakker (lastige, misschien voor later).
+    }
+
+    public void setLightsOn(Boolean lightsOn) {
+        //setten de nieuwe waarde van lightsOn in sharedprefs zodat je dit kunt gaan gebruiken
+        SharedPreferences.Editor editor = prefGame.edit();
+        this.lightsOn = lightsOn;
+        editor.putBoolean("lightsOn", lightsOn);
+        editor.apply();
     }
 
     public void showLightsBasedOnSharedPrefs() {
@@ -180,10 +262,12 @@ public class CatGameActivity extends MenuActivity {
             imageViewLightButton.setColorFilter(Color.parseColor("#63666A"),
                     PorterDuff.Mode.SRC_ATOP);
         }
-
     }
 
-    public void showHappy() {
+    public void showHappyBasedOnSharedPrefs() {
+        //Ophalen uit shared prefs
+        happy = prefGame.getInt("happy", 5);
+
         ratingHappy.setRating(happy);
         if (happy >= 4) {
             //Green
@@ -200,7 +284,10 @@ public class CatGameActivity extends MenuActivity {
         }
     }
 
-    public void showHungry() {
+    public void showHungryBasedOnSharedPrefs() {
+        //Ophalen uit shared prefs
+        hungry = prefGame.getInt("hungry", 5);
+
         ratingHungry.setRating(hungry);
         if (hungry >= 4) {
             //Green
@@ -217,7 +304,10 @@ public class CatGameActivity extends MenuActivity {
         }
     }
 
-    public void showWeight() {
+    public void showWeightBasedOnSharedPrefs() {
+        //Ophalen uit shared prefs
+        weight = prefGame.getInt("weight", 50);
+
         progressBarValueWeight.setProgress(weight);
         if (weight >= 40 && weight <=60) {
             //Green
@@ -232,7 +322,6 @@ public class CatGameActivity extends MenuActivity {
             progressBarValueWeight.getIndeterminateDrawable().setColorFilter(Color.parseColor("#EE4B2B"),
                     PorterDuff.Mode.MULTIPLY);
         }
-
     }
 
     public void showAgeAndProperCatImage() {
@@ -258,7 +347,7 @@ public class CatGameActivity extends MenuActivity {
 
             LocalDate date1 = LocalDate.parse(gameStartDateTime, dtf);
             //ToDo hier kun je een beetje mee spelen om wat verschillen te zien
-            LocalDate date2 = LocalDate.parse(getCurrentDate(), dtf);
+            LocalDate date2 = LocalDate.parse(getCurrentDateTime(), dtf);
             age = ChronoUnit.DAYS.between(date1, date2);
             System.out.println ("Days: " + age);
         }
@@ -280,9 +369,12 @@ public class CatGameActivity extends MenuActivity {
                         }
                         //setten van de gameStartDate want je gaat een nieuwe game beginnen
                         SharedPreferences.Editor editor = prefGame.edit();
-                        editor.putString("gameStartDateTime", getCurrentDate());
+                        editor.putString("gameStartDateTime", getCurrentDateTime());
                         editor.apply();
-                        gameStartDateTime = getCurrentDate();
+                        gameStartDateTime = getCurrentDateTime();
+
+                        setSleepingStartTime();
+                        setSleepingEndTime();
 
                         dialog.dismiss();
 
@@ -293,7 +385,7 @@ public class CatGameActivity extends MenuActivity {
         alertDialog.show();
     }
 
-    public String getCurrentDate() {
+    public String getCurrentDateTime() {
 
         DateTimeFormatter date = null;
         String currentDate = null;
@@ -306,6 +398,20 @@ public class CatGameActivity extends MenuActivity {
 
         }
         return currentDate;
+    }
+
+    public String getCurrentTime() {
+        DateTimeFormatter date = null;
+        String currentTime = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            date = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDateTime now = null;
+            now = LocalDateTime.now();
+            currentTime = date.format(now);
+            System.out.println("CURRENTTime: " + currentTime);
+
+        }
+        return currentTime;
     }
 }
 //https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)#:~:text=Five%20minutes%20after%20the%20clock,by%20the%20age%20of%206.

@@ -30,7 +30,8 @@
         android:text="Take care of your cat and see it grow old!"
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>
-    <RelativeLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="40dp"
@@ -38,17 +39,33 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewTitelGame">
 
         <ImageView
-            android:id="@+id/imageViewLightsOut"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:src="@mipmap/black_square"/>
-        <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:id="@+id/imageViewCat"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
-    </RelativeLayout>
+            android:layout_centerVertical="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageViewZzzz"
+            android:src="@mipmap/zzzz"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toRightOf="@id/imageViewCat" />
+        <ImageView
+            android:id="@+id/imageViewLightsOut"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@mipmap/black_square"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:layout_width="wrap_content"
