@@ -97,18 +97,8 @@ public class CatGameActivity extends MenuActivity {
 
         //ToDo nadenken over interstitial, op welk moment in game? Misschien altijd als er medicatie wordt gegeven ofzo, of poepflush
         /*
-        Maaltijd:
-            gezond: +10 voor weight
-            snack: +20 voor weight, +1 voor happy
-            teveel snacks = ziek?
-            honger + 1 ster
-            weiger eten bij volle honger?
-        Spelen:
-            weight: -10, maar kan niet onder de 50 komen
-            happy: spel is altijd 5 rondes, als speler 3 of meer wint -> + 1 happy
-            happy kan nooit meer worden dan 5
         Ziek:
-            wil niet eten of spelen, moet eerst medicijnen krijgen (1 of 2)
+          ToDo  wil niet eten of spelen, moet eerst medicijnen krijgen (1 of 2)
          !Discipline en attention
          */
 
@@ -160,11 +150,9 @@ public class CatGameActivity extends MenuActivity {
         });
 
         if (isZiekDateTime.equals("")) {
-            //Todo wat als ie wel ziek is, nog wat tonen?
             imageViewFoodButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println("HIER NOG WEL ");
                     final Dialog foodDialog = new Dialog(CatGameActivity.this, R.style.Dialog);
                     foodDialog.setContentView(R.layout.foodchoice);
                     foodDialog.setTitle("Feed your cat");
@@ -177,12 +165,10 @@ public class CatGameActivity extends MenuActivity {
                     foodChoiceHealthy.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            System.out.println("HEALTHY");
                             foodDialog.dismiss();
-                            //ToDo dingen doen
-                            //haal weight en honger op uit shared prefs
-                            //doe weight +10 en honger +1 sla weer op in sharedPrefs
-                            //mag niet boven de 100? dood
+
+                            adjustWeightMeter(10);
+                            adjustHungryMeter(1);
                         }
                     });
 
@@ -191,15 +177,20 @@ public class CatGameActivity extends MenuActivity {
                         public void onClick(View view) {
                             System.out.println("SNACK");
                             foodDialog.dismiss();
-                            //Todo dingen doen
-                            //haal weight, honger en happy op uit shared prefs (kan misschien ook 1 x boven de onclicks healthy + snacks
-                            //doe weight +20 , honger +1 en happy + 1 en sla weer op in shared prefs
-                            //honger en happy niet boven de 5
+
+                            //ToDo teveel snacks is ziek worden
+                            adjustWeightMeter(20);
+                            adjustHungryMeter(1);
+                            adjustHappyMeter(1);
                         }
                     });
                 }
             });
+        } else {
+            Toast.makeText(CatGameActivity.this, "Cat is sick, does not feel like eating", Toast.LENGTH_SHORT).show();
         }
+
+        //Todo Button maken voor start nieuwe game. Dat niet meer automatisch doen 5 sec na doodgaan, maar gewoon grafheuvel laten staan
     }
 
     public void getFromSharedPreferences() {
@@ -231,7 +222,43 @@ public class CatGameActivity extends MenuActivity {
         showPoopFunction();
         showCatSickBecauseOfPoop();
         checkCatIsSickLength();
+        showWeightBasedOnSharedPrefs();
+        showHungryBasedOnSharedPrefs();
+        showHappyBasedOnSharedPrefs();
     }
+
+    /*
+    ToDo implement numbers game (in dialog?)
+    start loopje t/m 4 (aantalRondes - 5 stuks)
+        bepaal random nummer van 1 tot 10, toon op scherm (nummerGetoond)
+        bepaal random nummer van 1 tot 10, bewaar (nummerHogerLager)
+        knop hoger en knop lager
+            klik op hoger:
+                Vergelijk nummerHogerLager met nummerGetoond
+                    if hoger -> score + 1 (scoreGebruiker) - toon tekst Jeeuj Goedzo
+                    if lager -> score - 1 (scoreGebruiker) - toon tekst Jammer
+                    if gelijk -> score blijft gelijk (scoreGebruiker) - toon tekst gelijkspel
+            klik op lager:
+                Vergelijk nummerHogerLager met nummerGetoond
+                    if lager -> score + 1 (scoreGebruiker)
+                    if hoger -> score - 1 (scoreGebruiker)
+                    if gelijk -> score blijft gelijk (scoreGebruiker)
+         Na vergelijken:
+            hide tekst winst/verlies/gelijk
+            nummerHogerLager doorschuiven naar nummerGetoond
+            genereer nieuw nummer voor nummerHogerLager
+     loop is klaar na 5 rondes
+            weight -10 (altijd ongeacht winst of verlies)
+            if scoreGebruiker >= 3 -> gebruiker wint happy + 1
+
+     Text to explain
+     Text voor winst/verlies/gelijk
+     ImageView showing number
+     ImageView showing higher
+     ImageView showing lower
+     Button showing stop game -> dismisses dialog
+     Can niet cancellen bij klik ernaast
+     */
 
     public void cleanUpPoop() {
         aantalPoepOpScherm = 0;
@@ -247,6 +274,36 @@ public class CatGameActivity extends MenuActivity {
         imageViewPoep4.setVisibility(View.GONE);
     }
 
+    public void adjustWeightMeter(Integer aanpassing) {
+        //haal uit shared prefs weight score
+        weight = prefGame.getInt("weight", 50);
+
+        Integer nieuweWeightScore = weight + aanpassing;
+
+        if (nieuweWeightScore <= 20) {
+            nieuweWeightScore = 20;
+            //zet score terug in shared prefs en doe update
+            SharedPreferences.Editor editor = prefGame.edit();
+            editor.putInt("weight", nieuweWeightScore);
+            editor.apply();
+
+            showWeightBasedOnSharedPrefs();
+            // Bij zo'n laag gewicht is poesje minder blij
+            adjustHappyMeter(-1);
+        } else if (nieuweWeightScore >=80 && nieuweWeightScore <= 100) {
+            adjustHappyMeter(-1);
+        } else if (nieuweWeightScore > 100) {
+            catIsDead();
+        } else {
+            //zet score terug in shared prefs en doe update
+            SharedPreferences.Editor editor = prefGame.edit();
+            editor.putInt("weight", nieuweWeightScore);
+            editor.apply();
+
+            showWeightBasedOnSharedPrefs();
+        }
+    }
+
     public void adjustHappyMeter(Integer aanpassing) {
         //haal uit shared prefs happy score
         happy = prefGame.getInt("happy", 5);
@@ -255,6 +312,14 @@ public class CatGameActivity extends MenuActivity {
 
         if (nieuweHappyScore <= 0) {
             catIsDead();
+        } else if (nieuweHappyScore > 5) {
+            nieuweHappyScore = 5;
+            //zet score terug in shared prefs en doe update meters
+            SharedPreferences.Editor editor = prefGame.edit();
+            editor.putInt("happy", nieuweHappyScore);
+            editor.apply();
+
+            showHappyBasedOnSharedPrefs();
         } else {
             //zet score terug in shared prefs en doe update meters
             SharedPreferences.Editor editor = prefGame.edit();
@@ -273,6 +338,14 @@ public class CatGameActivity extends MenuActivity {
 
         if (nieuweHungryScore <= 0) {
             catIsDead();
+        } else if (nieuweHungryScore > 5) {
+            nieuweHungryScore = 5;
+            //zet score terug in shared prefs en doe update meters
+            SharedPreferences.Editor editor = prefGame.edit();
+            editor.putInt("hungry", nieuweHungryScore);
+            editor.apply();
+
+            showHungryBasedOnSharedPrefs();
         } else {
             //zet score terug in shared prefs en doe update meters
             SharedPreferences.Editor editor = prefGame.edit();
@@ -350,6 +423,8 @@ public class CatGameActivity extends MenuActivity {
         SharedPreferences.Editor editor = prefGame.edit();
         editor.putString("isZiekDateTime", "");
         editor.apply();
+
+        isZiekDateTime = "";
 
         imageViewMedication.setVisibility(View.GONE);
     }
