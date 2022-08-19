@@ -230,6 +230,7 @@ public class CatGameActivity extends MenuActivity {
         laatsteDatumTijdPoep = prefGame.getString("laatsteDatumTijdPoep", getCurrentDateTime());
         aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
         ageOfDeath = prefGame.getInt("ageOfDeath", 22);
+        isZiekDateTime = prefGame.getString("isZiekDateTime", "");
     }
 
     public void gameExists() {
