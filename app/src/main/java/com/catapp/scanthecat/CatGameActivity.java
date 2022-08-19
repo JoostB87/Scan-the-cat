@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -63,6 +64,18 @@ public class CatGameActivity extends MenuActivity {
     private String isZiekDateTime;
     private ImageView foodChoiceHealthy;
     private ImageView foodChoiceSnack;
+    private TextView textViewNummerGetoond;
+    private ImageView imageViewHigher;
+    private ImageView imageViewLower;
+    private TextView higherLowerResult;
+    private Button stopGameButton;
+    private Integer aantalGespeeld;
+    private Integer scoreGebruiker;
+    private Integer nummerGetoond;
+    private Integer nummerHogerLager;
+    private Dialog gameDialog;
+    private Button buttonStartNewGame;
+    private Integer ageOfDeath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +107,9 @@ public class CatGameActivity extends MenuActivity {
         imageViewPoep4 = findViewById(R.id.imageViewPoep4);
         imageViewMedication = findViewById(R.id.imageViewMedication);
         imageViewDead = findViewById(R.id.imageViewDead);
+        buttonStartNewGame = findViewById(R.id.buttonStartNewGame);
 
         //ToDo nadenken over interstitial, op welk moment in game? Misschien altijd als er medicatie wordt gegeven ofzo, of poepflush
-        /*
-        Ziek:
-          ToDo  wil niet eten of spelen, moet eerst medicijnen krijgen (1 of 2)
-         !Discipline en attention
-         */
 
         getFromSharedPreferences();
 
@@ -190,7 +199,23 @@ public class CatGameActivity extends MenuActivity {
             Toast.makeText(CatGameActivity.this, "Cat is sick, does not feel like eating", Toast.LENGTH_SHORT).show();
         }
 
-        //Todo Button maken voor start nieuwe game. Dat niet meer automatisch doen 5 sec na doodgaan, maar gewoon grafheuvel laten staan
+        if (isZiekDateTime.equals("")) {
+            imageViewGameButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    numbersGame();
+                }
+            });
+        } else {
+            Toast.makeText(CatGameActivity.this, "Cat is sick, does not feel like playing", Toast.LENGTH_SHORT).show();
+        }
+
+        buttonStartNewGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startNewGame();
+            }
+        });
     }
 
     public void getFromSharedPreferences() {
@@ -204,6 +229,7 @@ public class CatGameActivity extends MenuActivity {
         sleepingEndTime = prefGame.getString("sleepingEndTime", "07:34");
         laatsteDatumTijdPoep = prefGame.getString("laatsteDatumTijdPoep", getCurrentDateTime());
         aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
+        ageOfDeath = prefGame.getInt("ageOfDeath", 22);
     }
 
     public void gameExists() {
@@ -225,40 +251,105 @@ public class CatGameActivity extends MenuActivity {
         showWeightBasedOnSharedPrefs();
         showHungryBasedOnSharedPrefs();
         showHappyBasedOnSharedPrefs();
+        checkAgeOfDeath();
     }
 
-    /*
-    ToDo implement numbers game (in dialog?)
-    start loopje t/m 4 (aantalRondes - 5 stuks)
-        bepaal random nummer van 1 tot 10, toon op scherm (nummerGetoond)
-        bepaal random nummer van 1 tot 10, bewaar (nummerHogerLager)
-        knop hoger en knop lager
-            klik op hoger:
-                Vergelijk nummerHogerLager met nummerGetoond
-                    if hoger -> score + 1 (scoreGebruiker) - toon tekst Jeeuj Goedzo
-                    if lager -> score - 1 (scoreGebruiker) - toon tekst Jammer
-                    if gelijk -> score blijft gelijk (scoreGebruiker) - toon tekst gelijkspel
-            klik op lager:
-                Vergelijk nummerHogerLager met nummerGetoond
-                    if lager -> score + 1 (scoreGebruiker)
-                    if hoger -> score - 1 (scoreGebruiker)
-                    if gelijk -> score blijft gelijk (scoreGebruiker)
-         Na vergelijken:
-            hide tekst winst/verlies/gelijk
-            nummerHogerLager doorschuiven naar nummerGetoond
-            genereer nieuw nummer voor nummerHogerLager
-     loop is klaar na 5 rondes
-            weight -10 (altijd ongeacht winst of verlies)
-            if scoreGebruiker >= 3 -> gebruiker wint happy + 1
+    public void checkAgeOfDeath() {
+        //haal uit shared prefs
+        ageOfDeath = prefGame.getInt("ageOfDeath", 22);
 
-     Text to explain
-     Text voor winst/verlies/gelijk
-     ImageView showing number
-     ImageView showing higher
-     ImageView showing lower
-     Button showing stop game -> dismisses dialog
-     Can niet cancellen bij klik ernaast
-     */
+        if (String.valueOf(ageOfDeath).equals(String.valueOf(age))) {
+            catIsDead();
+        }
+    }
+
+    public void numbersGame() {
+
+        gameDialog = new Dialog(CatGameActivity.this, R.style.Dialog);
+        gameDialog.setContentView(R.layout.gamehigherlower);
+        gameDialog.setTitle("Gametime!");
+        gameDialog.show();
+
+        textViewNummerGetoond = gameDialog.findViewById(R.id.textViewNummerGetoond);
+        imageViewHigher = gameDialog.findViewById(R.id.imageViewHigher);
+        imageViewLower = gameDialog.findViewById(R.id.imageViewLower);
+        higherLowerResult = gameDialog.findViewById(R.id.higherLowerResult);
+        stopGameButton = gameDialog.findViewById(R.id.stopGameButton);
+
+        Random rn = new Random();
+        scoreGebruiker = 0;
+        nummerGetoond = 0;
+        nummerHogerLager = 0;
+        aantalGespeeld = 0;
+
+        nummerGetoond = rn.nextInt(10) + 1;
+        nummerHogerLager = rn.nextInt(10) + 1;
+
+        textViewNummerGetoond.setText(String.valueOf(nummerGetoond));
+
+        imageViewHigher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (nummerHogerLager > nummerGetoond) {
+                    scoreGebruiker++;
+                    higherLowerResult.setText("You won!");
+                    newRoundAndCheckForWin();
+                } else if (nummerHogerLager < nummerGetoond){
+                    scoreGebruiker--;
+                    higherLowerResult.setText("You lost!");
+                    newRoundAndCheckForWin();
+                } else {
+                    higherLowerResult.setText("It's a draw!");
+                    aantalGespeeld++;
+                    newRoundAndCheckForWin();
+                }
+            }
+        });
+
+        imageViewLower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (nummerHogerLager < nummerGetoond) {
+                    scoreGebruiker++;
+                    higherLowerResult.setText("You won!");
+                    newRoundAndCheckForWin();
+                } else if (nummerHogerLager > nummerGetoond){
+                    scoreGebruiker--;
+                    higherLowerResult.setText("You lost!");
+                    newRoundAndCheckForWin();
+                } else {
+                    higherLowerResult.setText("It's a draw!");
+                    newRoundAndCheckForWin();
+                }
+            }
+        });
+
+        stopGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gameDialog.dismiss();
+            }
+        });
+    }
+
+    private void newRoundAndCheckForWin() {
+        aantalGespeeld++;
+        nummerGetoond = nummerHogerLager;
+        textViewNummerGetoond.setText(String.valueOf(nummerGetoond));
+        Random rn = new Random();
+        nummerHogerLager = rn.nextInt(10) + 1;
+
+        if (aantalGespeeld == 5) {
+            adjustWeightMeter(-10);
+            String textToast = "Gametime is over, you did not win. Try Again!";
+            if(scoreGebruiker >= 3) {
+                adjustHappyMeter(1);
+                textToast = "Gametime is over, you won. Cat is happy!";
+            }
+            gameDialog.dismiss();
+            Toast.makeText(CatGameActivity.this, textToast, Toast.LENGTH_LONG).show();
+        }
+    }
 
     public void cleanUpPoop() {
         aantalPoepOpScherm = 0;
@@ -292,6 +383,11 @@ public class CatGameActivity extends MenuActivity {
             adjustHappyMeter(-1);
         } else if (nieuweWeightScore >=80 && nieuweWeightScore <= 100) {
             adjustHappyMeter(-1);
+            SharedPreferences.Editor editor = prefGame.edit();
+            editor.putInt("weight", nieuweWeightScore);
+            editor.apply();
+
+            showWeightBasedOnSharedPrefs();
         } else if (nieuweWeightScore > 100) {
             catIsDead();
         } else {
@@ -438,13 +534,6 @@ public class CatGameActivity extends MenuActivity {
         imageViewLightsOut.setVisibility(View.GONE);
         imageViewMedication.setVisibility(View.GONE);
         imageViewDead.setVisibility(View.VISIBLE);
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //Popup voor nieuw spel tonen
-        startNewGame();
     }
 
     public void showPoopFunction() {
@@ -468,9 +557,7 @@ public class CatGameActivity extends MenuActivity {
             }
              */
             Long verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu);
-            Integer aantalNieuwePoep = (int) (verschilLaatstePoepEnNu / 3.5);
-            System.out.println("aantalPoep: " + aantalNieuwePoep);
-            System.out.println("Verschil: " + verschilLaatstePoepEnNu);
+            Integer aantalNieuwePoep = (int) (verschilLaatstePoepEnNu / 3);
 
             Integer totaalPoep = aantalPoepOpScherm + aantalNieuwePoep;
 
@@ -692,6 +779,16 @@ public class CatGameActivity extends MenuActivity {
         return age;
     }
 
+    public void setAgeOfDeath() {
+        Random rn = new Random();
+        ageOfDeath = rn.nextInt(24) + 19;
+
+        //setten van de gameStartDate want je gaat een nieuwe game beginnen
+        SharedPreferences.Editor editor = prefGame.edit();
+        editor.putInt("ageOfDeath", ageOfDeath);
+        editor.apply();
+    }
+
     public void startNewGame() {
         AlertDialog alertDialog = new AlertDialog.Builder(CatGameActivity.this).create();
         alertDialog.setTitle("New Game");
@@ -715,6 +812,8 @@ public class CatGameActivity extends MenuActivity {
                         setSleepingEndTime();
 
                         hideImageViews();
+
+                        setAgeOfDeath();
 
                         dialog.dismiss();
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/higherLowerUitleg"
+        android:text="Play the Higher Lower game \nClick the arrows to choose \nEach game consists of 5 rounds"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:id="@+id/textViewNummerGetoond"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/higherLowerUitleg"
+        app:layout_constraintRight_toLeftOf="@id/imageViewHigher"
+        android:layout_marginTop="60dp"
+        android:text="" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewHigher"
+        android:src="@drawable/ic_baseline_arrow_upward_24"
+        app:layout_constraintTop_toBottomOf="@+id/higherLowerUitleg"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toRightOf="@id/textViewNummerGetoond"
+        app:layout_constraintRight_toRightOf="parent"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewLower"
+        android:src="@drawable/ic_baseline_arrow_downward_24"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewHigher"
+        android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/textViewNummerGetoond"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/higherLowerResult"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text=""
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageViewLower"
+        android:layout_marginTop="40dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel game"
+        android:id="@+id/stopGameButton"
+        app:layout_constraintTop_toBottomOf="@id/higherLowerResult"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="25dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
