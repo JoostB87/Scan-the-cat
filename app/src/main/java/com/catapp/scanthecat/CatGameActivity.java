@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -299,8 +300,6 @@ public class CatGameActivity extends MenuActivity {
                     higherLowerResult.setText("You lost!");
                     newRoundAndCheckForWin();
                 } else {
-                    higherLowerResult.setText("It's a draw!");
-                    aantalGespeeld++;
                     newRoundAndCheckForWin();
                 }
             }
@@ -571,6 +570,7 @@ public class CatGameActivity extends MenuActivity {
                 LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), dtf);
             /*
             ToDo hier doen we nog even niks mee. Niet poepen tijdens slaap komt nog.
+            //ToDo als getcurrentdate ligt na currentdate withhour 23, dan gebruik currentdate withhour 23
             LocalDateTime slaapStartTijd = nu.withHour(22).withMinute(30);
             LocalDateTime slaapEindTijd = nu.withHour(7).withMinute(30);
             if (laatstePoep.isBefore(nu)) {
@@ -747,17 +747,19 @@ public class CatGameActivity extends MenuActivity {
         progressBarValueWeight.setProgress(weight);
         if (weight >= 40 && weight <=60) {
             //Green
-            int colorCodeGreen = Color.parseColor("#008000");
-            progressBarValueWeight.getIndeterminateDrawable().setColorFilter(Color.parseColor("#008000"),
-                    PorterDuff.Mode.MULTIPLY);
+            Drawable progressDrawable = progressBarValueWeight.getProgressDrawable().mutate();
+            progressDrawable.setColorFilter(Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+            progressBarValueWeight.setProgressDrawable(progressDrawable);
         } else if ((weight > 60 && weight <= 80) || (weight < 40 && weight >= 20)) {
             //Orange
-            progressBarValueWeight.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFA500"),
-                    PorterDuff.Mode.MULTIPLY);
+            Drawable progressDrawable = progressBarValueWeight.getProgressDrawable().mutate();
+            progressDrawable.setColorFilter(Color.YELLOW, android.graphics.PorterDuff.Mode.SRC_IN);
+            progressBarValueWeight.setProgressDrawable(progressDrawable);
         } else {
             //Red
-            progressBarValueWeight.getIndeterminateDrawable().setColorFilter(Color.parseColor("#EE4B2B"),
-                    PorterDuff.Mode.MULTIPLY);
+            Drawable progressDrawable = progressBarValueWeight.getProgressDrawable().mutate();
+            progressDrawable.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+            progressBarValueWeight.setProgressDrawable(progressDrawable);
         }
     }
 
