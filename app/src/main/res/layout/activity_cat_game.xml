@@ -291,10 +291,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/table"
         android:layout_marginTop="40dp"
-        android:text="Feed your cat when it's hungry, \n
+        android:text="Feed your cat when it's hungry, play with it \n
 clean up after it, feed it medication whenever it is sick. \n
-Play with it and dim the lights when it's sleeping. \n
-You know the drill. Have fun!"/>
+Dim the lights when it's sleeping. \n
+You know the drill. Have fun! \n
+Game takes multiple days, come back and continue whenever you feel like it."/>
 
     <Button
         android:layout_width="wrap_content"
