@@ -161,10 +161,11 @@ public class CatGameActivity extends MenuActivity {
             }
         });
 
-        if (isZiekDateTime.equals("")) {
-            imageViewFoodButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        imageViewFoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isZiekDateTime = prefGame.getString("isZiekDateTime", "");
+                if (isZiekDateTime.equals("")) {
                     final Dialog foodDialog = new Dialog(CatGameActivity.this, R.style.Dialog);
                     foodDialog.setContentView(R.layout.foodchoice);
                     foodDialog.setTitle("Feed your cat");
@@ -178,7 +179,6 @@ public class CatGameActivity extends MenuActivity {
                         @Override
                         public void onClick(View view) {
                             foodDialog.dismiss();
-
                             adjustWeightMeter(10);
                             adjustHungryMeter(1);
                         }
@@ -196,22 +196,24 @@ public class CatGameActivity extends MenuActivity {
                             adjustHappyMeter(1);
                         }
                     });
+                } else {
+                    Toast.makeText(CatGameActivity.this, "Cat is sick, does not feel like eating", Toast.LENGTH_SHORT).show();
                 }
-            });
-        } else {
-            Toast.makeText(CatGameActivity.this, "Cat is sick, does not feel like eating", Toast.LENGTH_SHORT).show();
-        }
+            }
+        });
 
-        if (isZiekDateTime.equals("")) {
-            imageViewGameButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        imageViewGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isZiekDateTime = prefGame.getString("isZiekDateTime", "");
+                if (isZiekDateTime.equals("")) {
                     numbersGame();
+                } else {
+                    Toast.makeText(CatGameActivity.this, "Cat is sick, does not feel like playing", Toast.LENGTH_SHORT).show();
                 }
-            });
-        } else {
-            Toast.makeText(CatGameActivity.this, "Cat is sick, does not feel like playing", Toast.LENGTH_SHORT).show();
-        }
+            }
+        });
+
 
         buttonStartNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
