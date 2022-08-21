@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent" android:layout_height="fill_parent">
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".CatGameActivity">
@@ -64,7 +62,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/imageViewMedication"
-            android:src="@drawable/ic_baseline_medication_48"
+            android:src="@drawable/ic_baseline_sick_60"
+            app:tint="@color/grey"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="10dp"
             app:layout_constraintRight_toLeftOf="@id/imageViewCat" />
@@ -111,15 +110,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
+
         <ImageView
             android:id="@+id/imageViewLightsOut"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:src="@mipmap/black_square"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:src="@mipmap/black_square"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
