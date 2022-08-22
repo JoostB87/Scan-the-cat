@@ -24,8 +24,6 @@ public class MainActivity extends MenuActivity {
     private EditText editTextSearchCat;
     private String myUrl = "https://api.api-ninjas.com/v1/cats?name=";
     private ProgressDialog progressDialog;
-    private Button buttonCatGIFS;
-    private Button buttonCatGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +34,6 @@ public class MainActivity extends MenuActivity {
         Button searchCatButton = findViewById(R.id.searchCatButton);
         ImageView imageCat = findViewById(R.id.imageCat);
         imageCat.setImageResource(R.mipmap.ic_launcher_cat_round);
-        buttonCatGame = findViewById(R.id.buttonCatGame);
-        buttonCatGIFS = findViewById(R.id.buttonCatGIFS);
 
         MobileAds.initialize(this, initializationStatus -> {
         });
@@ -67,24 +63,6 @@ public class MainActivity extends MenuActivity {
                 thread.start();
             }
 
-        });
-
-        buttonCatGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentCatGame = new Intent(MainActivity.this, CatGameActivity.class);
-                intentCatGame.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intentCatGame);
-            }
-        });
-
-        buttonCatGIFS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentCatGif = new Intent(MainActivity.this, DisplayCatGifActivity.class);
-                intentCatGif.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intentCatGif);
-            }
         });
     }
 

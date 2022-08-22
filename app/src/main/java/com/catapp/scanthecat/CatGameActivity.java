@@ -501,7 +501,7 @@ public class CatGameActivity extends MenuActivity {
         //haal uit shared prefs
         isZiekDateTime = prefGame.getString("isZiekDateTime", "");
 
-        //Todo kat wil niet eten of spelen als ziek is (kleurtje weergeven op medicijnen en blokkeren knoppen eten of spelen)
+        //Todo kleurtje weergeven op medicijnenknop wanneer kat ziek is
         if (!isZiekDateTime.equals("")) {
             DateTimeFormatter dtf = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
