@@ -1,5 +1,6 @@
 package com.catapp.scanthecat;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import android.app.Dialog;
@@ -10,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,9 +20,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,6 +84,8 @@ public class CatGameActivity extends MenuActivity {
     private Dialog gameDialog;
     private Button buttonStartNewGame;
     private Integer ageOfDeath;
+    private InterstitialAd mInterstitialAd;
+    private static final String TAG = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +129,65 @@ public class CatGameActivity extends MenuActivity {
             gameExists();
         }
 
+        AdRequest interstitialAdRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(CatGameActivity.this,"ca-app-pub-4788000105337932/6703764016", interstitialAdRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd;
+
+                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                // Called when fullscreen content is dismissed.
+                                //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
+                                if (aantalPoepOpScherm > 0) {
+                                    cleanUpPoop();
+                                } else {
+                                    Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
+                                }
+                                stuffThatNeedsRefreshing();
+                                Log.d("TAG", "The ad was dismissed.");
+                            }
+
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                // Called when fullscreen content failed to show.
+                                //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
+                                if (aantalPoepOpScherm > 0) {
+                                    cleanUpPoop();
+                                } else {
+                                    Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
+                                }
+                                stuffThatNeedsRefreshing();
+                                Log.d("TAG", "The ad failed to show.");
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                // Called when fullscreen content is shown.
+                                // Make sure to set your reference to null so you don't
+                                // show it a second time.
+                                mInterstitialAd = null;
+                                Log.d("TAG", "The ad was shown.");
+                            }
+                        });
+
+                        Log.i(TAG, "onAdLoaded");
+                    }
+
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.i(TAG, loadAdError.getMessage());
+                        mInterstitialAd = null;
+                    }
+                });
+
         imageViewLightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,13 +207,17 @@ public class CatGameActivity extends MenuActivity {
         imageViewBathroomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
-                if (aantalPoepOpScherm > 0) {
-                    cleanUpPoop();
+                if (mInterstitialAd != null) {
+                    mInterstitialAd.show(CatGameActivity.this);
                 } else {
-                    Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
+                    Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                    //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
+                    if (aantalPoepOpScherm > 0) {
+                        cleanUpPoop();
+                    } else {
+                        Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                stuffThatNeedsRefreshing();
             }
         });
 
