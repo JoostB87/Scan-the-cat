@@ -30,6 +30,7 @@ public class DisplayCatGifActivity extends MenuActivity {
     private InterstitialAd mInterstitialAd;
     private static final String TAG = null;
     private Integer counter = 0;
+    private Button btnNextGif;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,8 @@ public class DisplayCatGifActivity extends MenuActivity {
         setContentView(R.layout.activity_display_cat_gif);
 
         catGifImageview = findViewById(R.id.catGifImageview);
-        Button btnNextGif = findViewById(R.id.btnNextGif);
+        btnNextGif = findViewById(R.id.btnNextGif);
+        btnNextGif.setEnabled(false);
 
         //Haal 10 nieuwe gifs op en de 1e wordt direct getoond in de async task
         requestNewTenGifs();
@@ -188,6 +190,8 @@ public class DisplayCatGifActivity extends MenuActivity {
                         .asGif()
                         .load(catGif[0].getUrl())
                         .into(catGifImageview);
+
+                btnNextGif.setEnabled(true);
             });
         }
     }

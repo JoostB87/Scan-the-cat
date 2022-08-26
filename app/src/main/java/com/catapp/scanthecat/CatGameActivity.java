@@ -119,8 +119,6 @@ public class CatGameActivity extends MenuActivity {
         imageViewDead = findViewById(R.id.imageViewDead);
         buttonStartNewGame = findViewById(R.id.buttonStartNewGame);
 
-        //ToDo nadenken over interstitial, op welk moment in game? Misschien altijd als er medicatie wordt gegeven ofzo, of poepflush
-
         getFromSharedPreferences();
 
         if (gameStartDateTime.equals("")) {
