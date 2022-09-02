@@ -186,7 +186,7 @@ public class DisplayCatGifActivity extends MenuActivity {
                 // Convert JSON File to Java Object
                 catGif = gson.fromJson(resultCatImage, CatGifs[].class);
 
-                Glide.with(DisplayCatGifActivity.this)
+                Glide.with(getApplicationContext())
                         .asGif()
                         .load(catGif[0].getUrl())
                         .into(catGifImageview);
