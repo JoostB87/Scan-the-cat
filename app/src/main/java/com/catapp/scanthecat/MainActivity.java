@@ -124,34 +124,38 @@ public class MainActivity extends MenuActivity {
                 // Convert JSON File to Java Object
                 Cat[] cats = gson.fromJson(resultCats, Cat[].class);
 
-                //check het aantal resultaten
-                int countResults = cats.length;
-                // dismiss the progress dialog after receiving data from API
-                progressDialog.dismiss();
-                //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
-                myUrl = "https://api.api-ninjas.com/v1/cats?name=";
+                if (resultCats.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Something went wrong, try again later..", Toast.LENGTH_SHORT).show();
+                } else {
+                    //check het aantal resultaten
+                    int countResults = cats.length;
+                    // dismiss the progress dialog after receiving data from API
+                    progressDialog.dismiss();
+                    //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
+                    myUrl = "https://api.api-ninjas.com/v1/cats?name=";
 
-                switch(countResults) {
-                    case 0:
-                        Toast.makeText(MainActivity.this, "No results", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        //Ga direct naar displaycatresult, geen lijst nodig
-                        Intent intentResult = new Intent(MainActivity.this, DisplayCatGeneralInfoActivity.class);
-                        intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intentResult.putExtra("cats", cats[0]);
-                        getApplicationContext().startActivity(intentResult);
-                        //https://coderedirect.com/questions/513788/android-asynctask-start-new-activity-in-onpostexecute
+                    switch(countResults) {
+                        case 0:
+                            Toast.makeText(MainActivity.this, "No results", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 1:
+                            //Ga direct naar displaycatresult, geen lijst nodig
+                            Intent intentResult = new Intent(MainActivity.this, DisplayCatGeneralInfoActivity.class);
+                            intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intentResult.putExtra("cats", cats[0]);
+                            getApplicationContext().startActivity(intentResult);
+                            //https://coderedirect.com/questions/513788/android-asynctask-start-new-activity-in-onpostexecute
 
-                        break;
-                    default:
-                        //Meerdere results, dus resultlijst tonen
-                        Intent intentResultList = new Intent(MainActivity.this, DisplayCatListActivity.class);
-                        intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intentResultList.putExtra("cats", cats);
-                        getApplicationContext().startActivity(intentResultList);
+                            break;
+                        default:
+                            //Meerdere results, dus resultlijst tonen
+                            Intent intentResultList = new Intent(MainActivity.this, DisplayCatListActivity.class);
+                            intentResultList.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intentResultList.putExtra("cats", cats);
+                            getApplicationContext().startActivity(intentResultList);
 
-                        break;
+                            break;
+                    }
                 }
             });
         }

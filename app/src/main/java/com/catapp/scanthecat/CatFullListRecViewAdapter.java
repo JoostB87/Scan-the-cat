@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -145,11 +146,17 @@ public class CatFullListRecViewAdapter extends RecyclerView.Adapter<CatFullListR
                     //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
                     myUrl = "https://api.api-ninjas.com/v1/cats?name=";
 
-                    //Ga direct naar displaycatresult, geen lijst nodig
-                    Intent intentResult = new Intent(context, DisplayCatGeneralInfoActivity.class);
-                    intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intentResult.putExtra("cats", cats[0]);
-                    context.startActivity(intentResult);
+                    if (!resultCats.isEmpty()) {
+                        //Ga direct naar displaycatresult, geen lijst nodig
+                        Intent intentResult = new Intent(context, DisplayCatGeneralInfoActivity.class);
+                        intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intentResult.putExtra("cats", cats[0]);
+                        context.startActivity(intentResult);
+                    } else {
+                        Intent catListIntent = new Intent(context, CatFullListActivity.class);
+                        catListIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(catListIntent);
+                    }
                 }
             });
         }
