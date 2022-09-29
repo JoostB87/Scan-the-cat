@@ -41,8 +41,8 @@ public class DisplayCatGifActivity extends MenuActivity {
         btnNextGif = findViewById(R.id.btnNextGif);
         btnNextGif.setEnabled(false);
 
-        //Haal 10 nieuwe gifs op en de 1e wordt direct getoond in de async task
-        requestNewTenGifs();
+        //Haal nieuwe gifs op en de 1e wordt direct getoond in de async task
+        requestNewGifs();
 
         MobileAds.initialize(this, initializationStatus -> {
         });
@@ -56,7 +56,7 @@ public class DisplayCatGifActivity extends MenuActivity {
 
         btnNextGif.setOnClickListener(view -> {
 
-            if (counter >= 9) {
+            if (counter >= 4) {
                 counter = 0;
 
                 loadInterstitial(adRequest);
@@ -64,7 +64,7 @@ public class DisplayCatGifActivity extends MenuActivity {
                 if (mInterstitialAd != null) {
                     mInterstitialAd.show(DisplayCatGifActivity.this);
                 } else {
-                    requestNewTenGifs();
+                    requestNewGifs();
                     Log.d("TAG", "The interstitial ad wasn't ready yet.");
                 }
 
@@ -75,7 +75,7 @@ public class DisplayCatGifActivity extends MenuActivity {
         });
     }
 
-    public void requestNewTenGifs() {
+    public void requestNewGifs() {
         GetResultsAsync getResultsAsync = new GetResultsAsync();
         Thread thread = new Thread(getResultsAsync);
         thread.start();
@@ -101,14 +101,14 @@ public class DisplayCatGifActivity extends MenuActivity {
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 // Called when fullscreen content is dismissed.
-                                requestNewTenGifs();
+                                requestNewGifs();
                                 Log.d("TAG", "The ad was dismissed.");
                             }
 
                             @Override
                             public void onAdFailedToShowFullScreenContent(AdError adError) {
                                 // Called when fullscreen content failed to show.
-                                requestNewTenGifs();
+                                requestNewGifs();
                                 Log.d("TAG", "The ad failed to show.");
                             }
 
@@ -127,7 +127,7 @@ public class DisplayCatGifActivity extends MenuActivity {
 
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        requestNewTenGifs();
+                        requestNewGifs();
                         // Handle the error
                         Log.i(TAG, loadAdError.getMessage());
                         mInterstitialAd = null;
@@ -147,7 +147,7 @@ public class DisplayCatGifActivity extends MenuActivity {
                 URL url;
                 HttpURLConnection urlConnection = null;
                 try {
-                    String catGifUrl = "https://api.thecatapi.com/v1/images/search?mime_types=gif&limit=10";
+                    String catGifUrl = "https://api.thecatapi.com/v1/images/search?mime_types=gif&limit=5";
                     url = new URL(catGifUrl);
                     //open a URL connection
 
