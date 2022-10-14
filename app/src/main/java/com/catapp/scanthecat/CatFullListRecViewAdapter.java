@@ -3,6 +3,8 @@ package com.catapp.scanthecat;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +54,17 @@ public class CatFullListRecViewAdapter extends RecyclerView.Adapter<CatFullListR
 
         String catImage = "https://api-ninjas.com/images/cats/" + catName.toLowerCase().replace(" ", "_") + ".jpg";
 
-        Glide.with(context)
-                .asBitmap()
-                .load(catImage)
-                .into(holder.imageCat);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        if (activeNetwork != null) {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(catImage)
+                    .into(holder.imageCat);
+        } else {
+            Toast.makeText(context, "You have no active internet connection, try again later!", Toast.LENGTH_SHORT).show();
+        }
 
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +73,13 @@ public class CatFullListRecViewAdapter extends RecyclerView.Adapter<CatFullListR
 
                 myUrl = myUrl + catsLimited.get(pos);
 
-                CatFullListRecViewAdapter.GetResultsAsync getResultsAsync = new CatFullListRecViewAdapter.GetResultsAsync();
-                Thread thread = new Thread(getResultsAsync);
-                thread.start();
+                if (activeNetwork != null) {
+                    CatFullListRecViewAdapter.GetResultsAsync getResultsAsync = new CatFullListRecViewAdapter.GetResultsAsync();
+                    Thread thread = new Thread(getResultsAsync);
+                    thread.start();
+                } else {
+                    Toast.makeText(context, "You have no active internet connection, try again later!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

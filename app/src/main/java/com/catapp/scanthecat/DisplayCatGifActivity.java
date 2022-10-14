@@ -1,9 +1,13 @@
 package com.catapp.scanthecat;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -25,6 +29,7 @@ import java.net.URL;
 
 public class DisplayCatGifActivity extends MenuActivity {
 
+    private Context context;
     private CatGifs[] catGif;
     private ImageView catGifImageview;
     private InterstitialAd mInterstitialAd;
@@ -76,16 +81,33 @@ public class DisplayCatGifActivity extends MenuActivity {
     }
 
     public void requestNewGifs() {
-        GetResultsAsync getResultsAsync = new GetResultsAsync();
-        Thread thread = new Thread(getResultsAsync);
-        thread.start();
+
+        ConnectivityManager cm = (ConnectivityManager) DisplayCatGifActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        if (activeNetwork != null) {
+            GetResultsAsync getResultsAsync = new GetResultsAsync();
+            Thread thread = new Thread(getResultsAsync);
+            thread.start();
+        } else {
+            Toast.makeText(DisplayCatGifActivity.this, "You have no active internet connection, try again later!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void loadGifOnPage() {
-        Glide.with(DisplayCatGifActivity.this)
-                .asGif()
-                .load(catGif[counter].getUrl())
-                .into(catGifImageview);
+
+        ConnectivityManager cm = (ConnectivityManager) DisplayCatGifActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        if (activeNetwork != null) {
+            Glide.with(DisplayCatGifActivity.this)
+                    .asGif()
+                    .load(catGif[counter].getUrl())
+                    .into(catGifImageview);
+        } else {
+            Toast.makeText(DisplayCatGifActivity.this, "You have no active internet connection, try again later!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void loadInterstitial(AdRequest adRequest) {
