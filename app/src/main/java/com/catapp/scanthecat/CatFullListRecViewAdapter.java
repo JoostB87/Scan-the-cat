@@ -158,8 +158,7 @@ public class CatFullListRecViewAdapter extends RecyclerView.Adapter<CatFullListR
 
                     //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
                     myUrl = "https://api.api-ninjas.com/v1/cats?name=";
-
-                    if (resultCats.length() > 0) {
+                    if (cats.length > 0) {
                         //Ga direct naar displaycatresult, geen lijst nodig
                         Intent intentResult = new Intent(context, DisplayCatGeneralInfoActivity.class);
                         intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
