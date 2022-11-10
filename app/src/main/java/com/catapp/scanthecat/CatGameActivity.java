@@ -84,6 +84,7 @@ public class CatGameActivity extends MenuActivity {
     private Dialog gameDialog;
     private Button buttonStartNewGame;
     private Integer ageOfDeath;
+    //ToDo catIsDeadDate toevoegen String
     private InterstitialAd mInterstitialAd;
     private static final String TAG = null;
 
@@ -91,6 +92,8 @@ public class CatGameActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cat_game);
+
+        //Todo Uitleg over game verplaatsen naar de popup die je ziet bij start nieuwe game (dan zie je niet nonstop die tekst)
 
         MobileAds.initialize(this, initializationStatus -> {
         });
@@ -141,12 +144,7 @@ public class CatGameActivity extends MenuActivity {
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 // Called when fullscreen content is dismissed.
-                                //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
-                                if (aantalPoepOpScherm > 0) {
-                                    cleanUpPoop();
-                                } else {
-                                    Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
-                                }
+                                checkIfPoopIsPresent();
                                 stuffThatNeedsRefreshing();
                                 Log.d("TAG", "The ad was dismissed.");
                             }
@@ -154,12 +152,7 @@ public class CatGameActivity extends MenuActivity {
                             @Override
                             public void onAdFailedToShowFullScreenContent(AdError adError) {
                                 // Called when fullscreen content failed to show.
-                                //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
-                                if (aantalPoepOpScherm > 0) {
-                                    cleanUpPoop();
-                                } else {
-                                    Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
-                                }
+                                checkIfPoopIsPresent();
                                 stuffThatNeedsRefreshing();
                                 Log.d("TAG", "The ad failed to show.");
                             }
@@ -209,12 +202,7 @@ public class CatGameActivity extends MenuActivity {
                     mInterstitialAd.show(CatGameActivity.this);
                 } else {
                     Log.d("TAG", "The interstitial ad wasn't ready yet.");
-                    //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
-                    if (aantalPoepOpScherm > 0) {
-                        cleanUpPoop();
-                    } else {
-                        Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
-                    }
+                    checkIfPoopIsPresent();
                 }
             }
         });
@@ -306,6 +294,7 @@ public class CatGameActivity extends MenuActivity {
         aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
         ageOfDeath = prefGame.getInt("ageOfDeath", 22);
         isZiekDateTime = prefGame.getString("isZiekDateTime", "");
+        //ToDo toevoegen catIsDeadDate
     }
 
     public void gameExists() {
@@ -325,6 +314,15 @@ public class CatGameActivity extends MenuActivity {
         showHungryBasedOnSharedPrefs();
         showHappyBasedOnSharedPrefs();
         checkAgeOfDeath();
+    }
+
+    public void checkIfPoopIsPresent() {
+        //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
+        if (aantalPoepOpScherm > 0) {
+            cleanUpPoop();
+        } else {
+            Toast.makeText(CatGameActivity.this, "No catpoop to clean up!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void checkAgeOfDeath() {
@@ -601,6 +599,7 @@ public class CatGameActivity extends MenuActivity {
     }
 
     public void catIsDead() {
+        //ToDo setten van catIsDeadDate ook in shared prefs
         imageViewCat.setVisibility(View.GONE);
         imageViewPoep1.setVisibility(View.GONE);
         imageViewPoep2.setVisibility(View.GONE);
@@ -863,6 +862,13 @@ public class CatGameActivity extends MenuActivity {
 
     public Long calculateAge() {
 
+        /*
+        ToDo calculateAge moet niet gaan op basis van currentdate als kat dood is
+        Voeg catIsDeadDate toe
+        Check hier als catIsDeadDate = null, dan doe op basis van currentdate berekenen
+        anders berekenen op basis van catIsDeadDate
+         */
+
         DateTimeFormatter dtf = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
@@ -877,10 +883,11 @@ public class CatGameActivity extends MenuActivity {
     }
 
     public void setAgeOfDeath() {
+
         Random rn = new Random();
         ageOfDeath = rn.nextInt(24) + 19;
 
-        //setten van de gameStartDate want je gaat een nieuwe game beginnen
+        //setten van de age of death
         SharedPreferences.Editor editor = prefGame.edit();
         editor.putInt("ageOfDeath", ageOfDeath);
         editor.apply();
