@@ -431,6 +431,7 @@ public class CatGameActivity extends MenuActivity {
         imageViewPoep2.setVisibility(View.GONE);
         imageViewPoep3.setVisibility(View.GONE);
         imageViewPoep4.setVisibility(View.GONE);
+        imageViewBathroomButton.setColorFilter(Color.parseColor("#63666A"), PorterDuff.Mode.SRC_ATOP);
     }
 
     public void adjustWeightMeter(Integer aanpassing) {
@@ -678,20 +679,23 @@ public class CatGameActivity extends MenuActivity {
             imageViewPoep3.setVisibility(View.GONE);
             imageViewPoep4.setVisibility(View.GONE);
         } else if (totaalPoep == 1) {
-            //Todo Poep opruimen knop krijgt een kleurtje als er poep is
             imageViewPoep1.setVisibility(View.VISIBLE);
+            imageViewBathroomButton.setColorFilter(Color.parseColor("#FFA500"), PorterDuff.Mode.SRC_ATOP);
         } else if (totaalPoep == 2) {
             imageViewPoep1.setVisibility(View.VISIBLE);
             imageViewPoep2.setVisibility(View.VISIBLE);
+            imageViewBathroomButton.setColorFilter(Color.parseColor("#FFA500"), PorterDuff.Mode.SRC_ATOP);
         } else if (totaalPoep == 3) {
             imageViewPoep1.setVisibility(View.VISIBLE);
             imageViewPoep2.setVisibility(View.VISIBLE);
             imageViewPoep3.setVisibility(View.VISIBLE);
+            imageViewBathroomButton.setColorFilter(Color.parseColor("#FFA500"), PorterDuff.Mode.SRC_ATOP);
         } else if (totaalPoep == 4) {
             imageViewPoep1.setVisibility(View.VISIBLE);
             imageViewPoep2.setVisibility(View.VISIBLE);
             imageViewPoep3.setVisibility(View.VISIBLE);
             imageViewPoep4.setVisibility(View.VISIBLE);
+            imageViewBathroomButton.setColorFilter(Color.parseColor("#FFA500"), PorterDuff.Mode.SRC_ATOP);
         }
     }
 
