@@ -35,7 +35,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class CatGameActivity extends MenuActivity {
 
@@ -144,7 +143,7 @@ public class CatGameActivity extends MenuActivity {
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 // Called when fullscreen content is dismissed.
-                                checkIfPoopIsPresent();
+                                cleanupPoopIfPresentOrShowToast();
                                 stuffThatNeedsRefreshing();
                                 Log.d("TAG", "The ad was dismissed.");
                             }
@@ -152,7 +151,7 @@ public class CatGameActivity extends MenuActivity {
                             @Override
                             public void onAdFailedToShowFullScreenContent(AdError adError) {
                                 // Called when fullscreen content failed to show.
-                                checkIfPoopIsPresent();
+                                cleanupPoopIfPresentOrShowToast();
                                 stuffThatNeedsRefreshing();
                                 Log.d("TAG", "The ad failed to show.");
                             }
@@ -202,7 +201,7 @@ public class CatGameActivity extends MenuActivity {
                     mInterstitialAd.show(CatGameActivity.this);
                 } else {
                     Log.d("TAG", "The interstitial ad wasn't ready yet.");
-                    checkIfPoopIsPresent();
+                    cleanupPoopIfPresentOrShowToast();
                 }
             }
         });
@@ -316,7 +315,7 @@ public class CatGameActivity extends MenuActivity {
         checkAgeOfDeath();
     }
 
-    public void checkIfPoopIsPresent() {
+    public void cleanupPoopIfPresentOrShowToast() {
         //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
         if (aantalPoepOpScherm > 0) {
             cleanUpPoop();
@@ -670,7 +669,6 @@ public class CatGameActivity extends MenuActivity {
                 adjustHungryMeter(-aantalNieuwePoep);
             }
         }
-
     }
 
     public void setPoepOpScherm(Integer totaalPoep) {
@@ -680,6 +678,7 @@ public class CatGameActivity extends MenuActivity {
             imageViewPoep3.setVisibility(View.GONE);
             imageViewPoep4.setVisibility(View.GONE);
         } else if (totaalPoep == 1) {
+            //Todo Poep opruimen knop krijgt een kleurtje als er poep is
             imageViewPoep1.setVisibility(View.VISIBLE);
         } else if (totaalPoep == 2) {
             imageViewPoep1.setVisibility(View.VISIBLE);
