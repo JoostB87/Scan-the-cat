@@ -820,17 +820,17 @@ public class CatGameActivity extends MenuActivity {
         if (weight >= 40 && weight <=60) {
             //Green
             Drawable progressDrawable = progressBarValueWeight.getProgressDrawable().mutate();
-            progressDrawable.setColorFilter(Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+            progressDrawable.setColorFilter(Color.parseColor("#008000"), android.graphics.PorterDuff.Mode.SRC_IN);
             progressBarValueWeight.setProgressDrawable(progressDrawable);
         } else if ((weight > 60 && weight <= 80) || (weight < 40 && weight >= 20)) {
             //Orange
             Drawable progressDrawable = progressBarValueWeight.getProgressDrawable().mutate();
-            progressDrawable.setColorFilter(Color.YELLOW, android.graphics.PorterDuff.Mode.SRC_IN);
+            progressDrawable.setColorFilter(Color.parseColor("#FFA500"), android.graphics.PorterDuff.Mode.SRC_IN);
             progressBarValueWeight.setProgressDrawable(progressDrawable);
         } else {
             //Red
             Drawable progressDrawable = progressBarValueWeight.getProgressDrawable().mutate();
-            progressDrawable.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+            progressDrawable.setColorFilter(Color.parseColor("#EE4B2B"), android.graphics.PorterDuff.Mode.SRC_IN);
             progressBarValueWeight.setProgressDrawable(progressDrawable);
         }
     }
