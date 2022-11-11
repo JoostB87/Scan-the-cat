@@ -316,7 +316,6 @@ public class CatGameActivity extends MenuActivity {
     }
 
     public void cleanupPoopIfPresentOrShowToast() {
-        //ToDo knop krijgt een kleurtje op het moment dat er poep op te ruimen valt
         if (aantalPoepOpScherm > 0) {
             cleanUpPoop();
         } else {
