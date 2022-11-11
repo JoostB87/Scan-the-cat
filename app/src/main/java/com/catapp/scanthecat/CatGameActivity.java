@@ -560,6 +560,7 @@ public class CatGameActivity extends MenuActivity {
         editor.apply();
 
         imageViewMedication.setVisibility(View.VISIBLE);
+        imageViewMedicationButton.setColorFilter(Color.parseColor("#FFA500"), PorterDuff.Mode.SRC_ATOP);
 
         //haal 1 van de happymeter af, want ziek
         adjustHappyMeter(-1);
@@ -569,7 +570,6 @@ public class CatGameActivity extends MenuActivity {
         //haal uit shared prefs
         isZiekDateTime = prefGame.getString("isZiekDateTime", "");
 
-        //Todo kleurtje weergeven op medicijnenknop wanneer kat ziek is
         if (!isZiekDateTime.equals("")) {
             DateTimeFormatter dtf = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -594,6 +594,7 @@ public class CatGameActivity extends MenuActivity {
         isZiekDateTime = "";
 
         imageViewMedication.setVisibility(View.GONE);
+        imageViewMedicationButton.setColorFilter(Color.parseColor("#63666A"), PorterDuff.Mode.SRC_ATOP);
 
         stuffThatNeedsRefreshing();
     }
