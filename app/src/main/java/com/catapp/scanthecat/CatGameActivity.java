@@ -92,8 +92,6 @@ public class CatGameActivity extends MenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cat_game);
 
-        //Todo Uitleg over game verplaatsen naar de popup die je ziet bij start nieuwe game (dan zie je niet nonstop die tekst)
-
         MobileAds.initialize(this, initializationStatus -> {
         });
 
@@ -899,7 +897,12 @@ public class CatGameActivity extends MenuActivity {
     public void startNewGame() {
         AlertDialog alertDialog = new AlertDialog.Builder(CatGameActivity.this).create();
         alertDialog.setTitle("New Game");
-        alertDialog.setMessage("Start a new game");
+        alertDialog.setMessage("Start a new game. \n\n" +
+                "Feed your cat when it's hungry, play with it, " +
+                "clean up after it, feed it medication whenever it is sick. " +
+                "Dim the lights when it's sleeping. \n\n" +
+                "You know the drill. Have fun! \n\n" +
+                "Game takes multiple days, come back and continue whenever you feel like it.");
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
