@@ -93,8 +93,6 @@ public class CatGameActivity extends MenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cat_game);
 
-        //ToDo alleen tonen start nieuw spel knop tonen wanneer kat is dood
-
         MobileAds.initialize(this, initializationStatus -> {
         });
 
@@ -617,6 +615,7 @@ public class CatGameActivity extends MenuActivity {
         imageViewMedicationButton.setVisibility(View.GONE);
         imageViewBathroomButton.setVisibility(View.GONE);
         imageViewDead.setVisibility(View.VISIBLE);
+        buttonStartNewGame.setVisibility(View.VISIBLE);
 
         catIsDeadDate = getCurrentDateTime();
         SharedPreferences.Editor editor = prefGame.edit();
@@ -870,6 +869,7 @@ public class CatGameActivity extends MenuActivity {
         imageViewLightsOut.setVisibility(View.GONE);
         imageViewMedication.setVisibility(View.GONE);
         imageViewDead.setVisibility(View.GONE);
+        buttonStartNewGame.setVisibility(View.GONE);
     }
 
     public Long calculateAge() {
