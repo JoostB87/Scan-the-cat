@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.Random;
 
 public class CatGameActivity extends MenuActivity {
@@ -83,7 +84,7 @@ public class CatGameActivity extends MenuActivity {
     private Dialog gameDialog;
     private Button buttonStartNewGame;
     private Integer ageOfDeath;
-    //ToDo catIsDeadDate toevoegen String
+    private String catIsDeadDate;
     private InterstitialAd mInterstitialAd;
     private static final String TAG = null;
 
@@ -91,6 +92,8 @@ public class CatGameActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cat_game);
+
+        //ToDo alleen tonen start nieuw spel knop tonen wanneer kat is dood
 
         MobileAds.initialize(this, initializationStatus -> {
         });
@@ -291,7 +294,7 @@ public class CatGameActivity extends MenuActivity {
         aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
         ageOfDeath = prefGame.getInt("ageOfDeath", 22);
         isZiekDateTime = prefGame.getString("isZiekDateTime", "");
-        //ToDo toevoegen catIsDeadDate
+        catIsDeadDate = prefGame.getString("catIsDeadDate", "");
     }
 
     public void gameExists() {
@@ -310,7 +313,11 @@ public class CatGameActivity extends MenuActivity {
         showWeightBasedOnSharedPrefs();
         showHungryBasedOnSharedPrefs();
         showHappyBasedOnSharedPrefs();
-        checkAgeOfDeath();
+        if (Objects.equals(catIsDeadDate, "")) {
+            checkAgeOfDeath();
+        } else {
+            catIsDead();
+        }
     }
 
     public void cleanupPoopIfPresentOrShowToast() {
@@ -597,7 +604,6 @@ public class CatGameActivity extends MenuActivity {
     }
 
     public void catIsDead() {
-        //ToDo setten van catIsDeadDate ook in shared prefs
         imageViewCat.setVisibility(View.GONE);
         imageViewPoep1.setVisibility(View.GONE);
         imageViewPoep2.setVisibility(View.GONE);
@@ -611,6 +617,11 @@ public class CatGameActivity extends MenuActivity {
         imageViewMedicationButton.setVisibility(View.GONE);
         imageViewBathroomButton.setVisibility(View.GONE);
         imageViewDead.setVisibility(View.VISIBLE);
+
+        catIsDeadDate = getCurrentDateTime();
+        SharedPreferences.Editor editor = prefGame.edit();
+        editor.putString("catIsDeadDate", getCurrentDateTime());
+        editor.apply();
     }
 
     public void showPoopFunction() {
@@ -638,7 +649,7 @@ public class CatGameActivity extends MenuActivity {
                 LocalDateTime laatstePoep = LocalDateTime.parse(laatsteDatumTijdPoep, dtf);
                 LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), dtf);
             /*
-            ToDo hier doen we nog even niks mee. Niet poepen tijdens slaap komt nog.
+            //ToDo hier doen we nog even niks mee. Niet poepen tijdens slaap komt nog.
             //ToDo als getcurrentdate ligt na currentdate withhour 23, dan gebruik currentdate withhour 23
             LocalDateTime slaapStartTijd = nu.withHour(22).withMinute(30);
             LocalDateTime slaapEindTijd = nu.withHour(7).withMinute(30);
@@ -863,20 +874,24 @@ public class CatGameActivity extends MenuActivity {
 
     public Long calculateAge() {
 
-        /*
-        ToDo calculateAge moet niet gaan op basis van currentdate als kat dood is
-        Voeg catIsDeadDate toe
-        Check hier als catIsDeadDate = null, dan doe op basis van currentdate berekenen
-        anders berekenen op basis van catIsDeadDate
-         */
+        catIsDeadDate = prefGame.getString("catIsDeadDate", "");
+        String date = null;
+        //Als cat dood is dan wil je vergelijken met de datum waarop de kat is doodgegaan, niet met de huidige datum.
+        if (Objects.equals(catIsDeadDate, "")) {
+            date = getCurrentDateTime();
+        } else {
+            date = catIsDeadDate;
+        }
 
-        DateTimeFormatter dtf = null;
+        System.out.println("DEZEKATISHELEMAALENORMDOODGEGAANCALCULATEAGE");
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter dtf = null;
             dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
             LocalDate date1 = LocalDate.parse(gameStartDateTime, dtf);
             //ToDo hier kun je een beetje mee spelen om wat verschillen te zien
-            LocalDate date2 = LocalDate.parse(getCurrentDateTime(), dtf);
+            LocalDate date2 = LocalDate.parse(date, dtf);
             age = ChronoUnit.DAYS.between(date1, date2);
             System.out.println ("Days: " + age);
         }

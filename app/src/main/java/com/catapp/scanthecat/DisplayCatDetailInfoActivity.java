@@ -53,8 +53,6 @@ public class DisplayCatDetailInfoActivity extends MenuActivity {
         buttonDetails.setVisibility(View.VISIBLE);
         buttonDetails.setEnabled(false);
 
-        //Todo nog iets doen met de knoppen bovenin (ene grijs, andere niet)
-
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
