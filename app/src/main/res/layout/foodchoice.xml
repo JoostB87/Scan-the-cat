@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="5dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +28,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/foodChoiceSnack"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        android:background="#000000"
+        android:padding="1dp"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -39,6 +42,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@id/foodChoiceHealthy"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        android:background="#000000"
+        android:padding="1dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
