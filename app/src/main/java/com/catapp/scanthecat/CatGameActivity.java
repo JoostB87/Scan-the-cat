@@ -32,6 +32,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -85,6 +86,7 @@ public class CatGameActivity extends MenuActivity {
     private Button buttonStartNewGame;
     private Integer ageOfDeath;
     private String catIsDeadDate;
+    private String lastLightsChangedDateTime;
     private InterstitialAd mInterstitialAd;
     private static final String TAG = null;
 
@@ -119,6 +121,9 @@ public class CatGameActivity extends MenuActivity {
         imageViewMedication = findViewById(R.id.imageViewMedication);
         imageViewDead = findViewById(R.id.imageViewDead);
         buttonStartNewGame = findViewById(R.id.buttonStartNewGame);
+
+        //ToDo geen kat ziek lengte tellen gedurende de nacht
+        //ToDo geen poep meetellen gedurende de nacht
 
         getFromSharedPreferences();
 
@@ -285,6 +290,7 @@ public class CatGameActivity extends MenuActivity {
         weight = prefGame.getInt("weight", 50);
         hungry = prefGame.getInt("hungry", 4);
         happy = prefGame.getInt("happy", 4);
+        lastLightsChangedDateTime = prefGame.getString("lastLightsChangedDateTime", "01-01-1970 00:00");
         lightsOn = prefGame.getBoolean("lightsOn", true);
         sleepingStartTime = prefGame.getString("sleepingStartTime", "22:43");
         sleepingEndTime = prefGame.getString("sleepingEndTime", "07:34");
@@ -578,7 +584,8 @@ public class CatGameActivity extends MenuActivity {
                 dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
                 LocalDateTime ziekSinds = LocalDateTime.parse(isZiekDateTime, dtf);
                 LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), dtf);
-
+                //ToDo if ziekSinds is tussen slaapstart en slaapeindtijd en nu is tussen slaapstart en slaapeindtijd, doe dan hoursbetween -8
+                //ToDo wat als zieksinds is voor slaapstart of na slaapeind
                 Long duurZiekte = ChronoUnit.HOURS.between(ziekSinds, nu);
                 if(duurZiekte > 8) {
                     catIsDead();
@@ -718,8 +725,6 @@ public class CatGameActivity extends MenuActivity {
         SharedPreferences.Editor editor = prefGame.edit();
         editor.putString("sleepingStartTime", sleepingStartTime);
         editor.apply();
-
-        System.out.println("STARTTIJD: " + sleepingStartTime);
     }
 
     public void setSleepingEndTime() {
@@ -733,30 +738,53 @@ public class CatGameActivity extends MenuActivity {
         SharedPreferences.Editor editor = prefGame.edit();
         editor.putString("sleepingEndTime", sleepingEndTime);
         editor.apply();
-
-        System.out.println("EINDTIJD: " + sleepingEndTime);
     }
 
     public Boolean sleeping() {
         System.out.println("SleepingStartTime: " + sleepingStartTime);
         System.out.println("SleepingEndTime: " + sleepingEndTime);
         DateTimeFormatter dtf = null;
+        DateTimeFormatter date = null;
+        lastLightsChangedDateTime = prefGame.getString("lastLightsChangedDateTime", "01-01-1970 00:00");
+        lightsOn = prefGame.getBoolean("lightsOn", true);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             dtf = DateTimeFormatter.ofPattern("HH:mm");
+            date = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             LocalTime starttijdSlapen = LocalTime.parse(sleepingStartTime, dtf);
             LocalTime eindtijdSlapen = LocalTime.parse(sleepingEndTime, dtf);
             LocalTime currentTime = LocalTime.parse(getCurrentTime(), dtf);
+            //convert lastLightsChangedDateTime string naar DateTimeFormat
+            LocalDateTime lastLightsChanged = LocalDateTime.parse(lastLightsChangedDateTime, date);
+            //convert van alles samen tot de huidige datum met de slaapeindtijd
+            LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), date);
+            int sleepEndTimeMinutes = Integer.parseInt(sleepingEndTime.substring(sleepingEndTime.length() - 2));
+            int sleepStartTimeMinutes = Integer.parseInt(sleepingStartTime.substring((sleepingStartTime.length() -2)));
+            int numberOfDay = Integer.parseInt(getCurrentDateTime().substring(0,2));
+            int yesterdayNumberOfDay = numberOfDay-1;
+            LocalDateTime slaapEindDatumTijd = nu.withHour(7).withMinute(sleepEndTimeMinutes);
+            LocalDateTime slaapStartDatumTijd = nu.withDayOfMonth(yesterdayNumberOfDay).withHour(22).withMinute(sleepStartTimeMinutes);
             if (currentTime.isBefore(starttijdSlapen) && eindtijdSlapen.isBefore(currentTime)) {
                 imageViewZzzz.setVisibility(View.GONE);
                 sleepingBool = false;
-                //ToDo nog iets doen met verlichting. Gaat automatisch aan bij wakker worden, maar dat mag maar 1x gebeuren
+                if (lastLightsChanged.isAfter(LocalDateTime.of(1971, 1, 1, 12, 00)) && lastLightsChanged.isBefore(slaapEindDatumTijd) && lightsOn == false) {
+                    //verlichting aanzetten wanneer je inlogt en het is dag (1x omdat daarna lastlightschangeddatetime weer wordt geupdatet)
+                    setLightsOn(true);
+                } else if (lastLightsChanged.isAfter(LocalDateTime.of(1971, 1, 1, 12, 00)) && lastLightsChanged.isBefore(slaapStartDatumTijd) && lightsOn == true) {
+                    //licht is nooit uitgezet voor deze nacht, dus happy -1
+                    adjustHappyMeter(-1);
+                    setLightsOn(true);
+                } else if (lastLightsChanged.isBefore(LocalDateTime.of(1971, 1, 1, 12, 00)) && age >= 1) {
+                    //licht is nog nooit uitgezet, dus happy -1
+                    adjustHappyMeter(-1);
+                    setLightsOn(true);
+                }
             } else {
                 imageViewZzzz.setVisibility(View.VISIBLE);
                 sleepingBool = true;
             }
         }
         return sleepingBool;
-        //ToDo Afhankelijk van licht aan of uit tijdens slapen wordt eerder wakker (lastige, misschien voor later).
     }
 
     public void setLightsOn(Boolean lightsOn) {
@@ -764,6 +792,7 @@ public class CatGameActivity extends MenuActivity {
         SharedPreferences.Editor editor = prefGame.edit();
         this.lightsOn = lightsOn;
         editor.putBoolean("lightsOn", lightsOn);
+        editor.putString("lastLightsChangedDateTime", getCurrentDateTime());
         editor.apply();
     }
 
@@ -882,8 +911,6 @@ public class CatGameActivity extends MenuActivity {
         } else {
             date = catIsDeadDate;
         }
-
-        System.out.println("DEZEKATISHELEMAALENORMDOODGEGAANCALCULATEAGE");
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             DateTimeFormatter dtf = null;
