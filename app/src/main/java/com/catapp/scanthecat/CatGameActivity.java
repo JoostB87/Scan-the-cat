@@ -124,9 +124,6 @@ public class CatGameActivity extends MenuActivity {
         imageViewDead = findViewById(R.id.imageViewDead);
         buttonStartNewGame = findViewById(R.id.buttonStartNewGame);
 
-        //ToDo geen kat ziek lengte tellen gedurende de nacht
-        //ToDo geen poep meetellen gedurende de nacht
-
         getFromSharedPreferences();
 
         if (gameStartDateTime.equals("")) {
@@ -641,10 +638,9 @@ public class CatGameActivity extends MenuActivity {
                     catIsDead();
                 }
 
-                //ToDo if ziekSinds is in wakkertijd (tussen slaap eind en start) en nu is in wakkertijd, doe dan hoursbetween -8
-                //ToDo if ziekSinds is in slaaptijd zet dan zieksinds op volgende dag 07:30 , tenzij na 00:00, dan zelfde dag 07.30
-                //ToDo if nu is in slaaptijd, zet dan nu op vorige dag 22:30, tenzij voor 00:00, dan zelfde dag 22:30
-
+                /*ToDo if ziekSinds is in wakkertijd (tussen slaap eind en start) en nu is in wakkertijd, doe dan hoursbetween -8
+                     if ziekSinds is in slaaptijd zet dan zieksinds op volgende dag 07:30 , tenzij na 00:00, dan zelfde dag 07.30
+                     if nu is in slaaptijd, zet dan nu op vorige dag 22:30, tenzij voor 00:00, dan zelfde dag 22:30 */
             }
         }
     }
@@ -710,13 +706,23 @@ public class CatGameActivity extends MenuActivity {
                 LocalDateTime laatstePoep = LocalDateTime.parse(laatsteDatumTijdPoep, dtf);
                 LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), dtf);
             /*
-            //ToDo hier doen we nog even niks mee. Niet poepen tijdens slaap komt nog.
-            //ToDo als getcurrentdate ligt na currentdate withhour 23, dan gebruik currentdate withhour 23
-            LocalDateTime slaapStartTijd = nu.withHour(22).withMinute(30);
-            LocalDateTime slaapEindTijd = nu.withHour(7).withMinute(30);
-            if (laatstePoep.isBefore(nu)) {
-            }
-             */
+               ToDo hier doen we nog even niks mee. Niet poepen tijdens slaap komt nog.
+                als getcurrentdate ligt na currentdate withhour 23, dan gebruik currentdate withhour 23
+                LocalDateTime slaapStartTijd = nu.withHour(22).withMinute(30);
+                LocalDateTime slaapEindTijd = nu.withHour(7).withMinute(30);
+                if (laatstePoep.isBefore(nu)) {
+                }
+
+                int sleepEndTimeMinutes = Integer.parseInt(sleepingEndTime.substring(sleepingEndTime.length() - 2));
+                int sleepStartTimeMinutes = Integer.parseInt(sleepingStartTime.substring((sleepingStartTime.length() -2)));
+                int numberOfDayNu = Integer.parseInt(getCurrentDateTime().substring(0,2));
+                int numberOfDayZiek = Integer.parseInt(isZiekDateTime.substring(0,2));
+                int yesterdayNumberOfDay = numberOfDayNu-1;
+                int tomorrowNumberOfDayZiek = numberOfDayZiek+1;
+                
+                Long duurZiekte = null;
+                if ((numberOfDayZiek-numberOfDayNu) >= 1) {
+            */
                 Long verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu);
                 Integer aantalNieuwePoep = (int) (verschilLaatstePoepEnNu / 3);
 
@@ -1021,6 +1027,7 @@ public class CatGameActivity extends MenuActivity {
                         imageViewLightButton.setVisibility(View.VISIBLE);
                         imageViewGameButton.setVisibility(View.VISIBLE);
                         imageViewMedicationButton.setVisibility(View.VISIBLE);
+                        imageViewMedicationButton.setColorFilter(Color.parseColor("#63666A"), PorterDuff.Mode.SRC_ATOP);
                         imageViewBathroomButton.setVisibility(View.VISIBLE);
 
                         setAgeOfDeath();
