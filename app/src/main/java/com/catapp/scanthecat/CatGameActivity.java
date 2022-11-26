@@ -30,6 +30,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -212,11 +213,15 @@ public class CatGameActivity extends MenuActivity {
         imageViewMedicationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*ToDo eerst checken of poep is en dat laten opruimen (via toast message). Als je eerst dit geeft dan kan het zijn dat
+                    ie nog een keer -happy doet en dat je daar dood van gaat
+                 */
                 if (!isZiekDateTime.equals("")) {
                     feedMedication();
                 } else {
                     Toast.makeText(CatGameActivity.this, "Cat is not sick, no need for medication!", Toast.LENGTH_SHORT).show();
                 }
+                //ToDo onder is niet nodig refreshen, want of je showed toast, niks aan de hand dus. Of je doet feedmed, die heeft al refresh
                 stuffThatNeedsRefreshing();
             }
         });
@@ -247,7 +252,6 @@ public class CatGameActivity extends MenuActivity {
                     foodChoiceSnack.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            System.out.println("SNACK");
                             foodDialog.dismiss();
 
                             //ToDo teveel snacks is ziek worden
@@ -443,6 +447,7 @@ public class CatGameActivity extends MenuActivity {
 
     public void adjustWeightMeter(Integer aanpassing) {
         //haal uit shared prefs weight score
+        System.out.println("Aanpassing in gewicht: " + aanpassing);
         weight = prefGame.getInt("weight", 50);
 
         Integer nieuweWeightScore = weight + aanpassing;
@@ -592,7 +597,7 @@ public class CatGameActivity extends MenuActivity {
                 int tomorrowNumberOfDayZiek = numberOfDayZiek+1;
 
                 Long duurZiekte = null;
-                if ((numberOfDayZiek-numberOfDayNu) >= 1) {
+                if ((numberOfDayNu-numberOfDayZiek) >= 1) {
                     //if onder - ziekSinds is in wakkertijd (doe dan niks met ziekSinds):
                     if (ziekSinds.isAfter(ziekSinds.withHour(7).withMinute(sleepEndTimeMinutes)) && ziekSinds.isBefore(ziekSinds.withHour(22).withMinute(sleepStartTimeMinutes))) {
                         //if onder - nu is in wakkertijd (haal dan de nacht - 8 uur - van duurZiekte af)
@@ -618,7 +623,7 @@ public class CatGameActivity extends MenuActivity {
                         } else {
                             duurZiekte = ChronoUnit.HOURS.between(ziekSinds.withDayOfMonth(tomorrowNumberOfDayZiek).withHour(7).withMinute(sleepEndTimeMinutes), nu.withDayOfMonth(yesterdayNumberOfDay).withHour(22).withMinute(sleepStartTimeMinutes));
                         }
-                    //else onder - ziekSinds is niet in wakkertijd, maar wel na 12 uur
+                    //else onder - ziekSinds is niet in wakkertijd, maar wel na 12 uur (zet dan zieksinds naar 7.30 deze ochtend)
                     } else {
                         //if onder - nu is in wakkertijd (zet zieksinds naar 07:30 deze dag)
                         if (nu.isAfter(nu.withHour(7).withMinute(sleepEndTimeMinutes)) && nu.isBefore(nu.withHour(22).withMinute(sleepStartTimeMinutes))) {
@@ -637,10 +642,6 @@ public class CatGameActivity extends MenuActivity {
                 if(duurZiekte > 6) {
                     catIsDead();
                 }
-
-                /*ToDo if ziekSinds is in wakkertijd (tussen slaap eind en start) en nu is in wakkertijd, doe dan hoursbetween -8
-                     if ziekSinds is in slaaptijd zet dan zieksinds op volgende dag 07:30 , tenzij na 00:00, dan zelfde dag 07.30
-                     if nu is in slaaptijd, zet dan nu op vorige dag 22:30, tenzij voor 00:00, dan zelfde dag 22:30 */
             }
         }
     }
@@ -705,26 +706,59 @@ public class CatGameActivity extends MenuActivity {
                 dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
                 LocalDateTime laatstePoep = LocalDateTime.parse(laatsteDatumTijdPoep, dtf);
                 LocalDateTime nu = LocalDateTime.parse(getCurrentDateTime(), dtf);
-            /*
-               ToDo hier doen we nog even niks mee. Niet poepen tijdens slaap komt nog.
-                als getcurrentdate ligt na currentdate withhour 23, dan gebruik currentdate withhour 23
-                LocalDateTime slaapStartTijd = nu.withHour(22).withMinute(30);
-                LocalDateTime slaapEindTijd = nu.withHour(7).withMinute(30);
-                if (laatstePoep.isBefore(nu)) {
-                }
-
                 int sleepEndTimeMinutes = Integer.parseInt(sleepingEndTime.substring(sleepingEndTime.length() - 2));
                 int sleepStartTimeMinutes = Integer.parseInt(sleepingStartTime.substring((sleepingStartTime.length() -2)));
                 int numberOfDayNu = Integer.parseInt(getCurrentDateTime().substring(0,2));
-                int numberOfDayZiek = Integer.parseInt(isZiekDateTime.substring(0,2));
+                int numberOfDayPoep = Integer.parseInt(laatsteDatumTijdPoep.substring(0,2));
                 int yesterdayNumberOfDay = numberOfDayNu-1;
-                int tomorrowNumberOfDayZiek = numberOfDayZiek+1;
-                
-                Long duurZiekte = null;
-                if ((numberOfDayZiek-numberOfDayNu) >= 1) {
-            */
-                Long verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu);
-                Integer aantalNieuwePoep = (int) (verschilLaatstePoepEnNu / 3);
+                int tomorrowNumberOfDayPoep = numberOfDayPoep+1;
+
+                Long verschilLaatstePoepEnNu = null;
+                if ((numberOfDayNu-numberOfDayPoep) >= 1) {
+                    //if onder - laatstePoep is in wakkertijd
+                    if (laatstePoep.isAfter(laatstePoep.withHour(7).withMinute(sleepEndTimeMinutes)) && laatstePoep.isBefore(laatstePoep.withHour(22).withMinute(sleepStartTimeMinutes))) {
+                        //if onder - nu is in wakkertijd (haal dan de nacht - 8 uur - van verschilLaatstePoepEnNu af
+                        if(nu.isAfter(nu.withHour(7).withMinute(sleepEndTimeMinutes)) && nu.isBefore(nu.withHour(22).withMinute(sleepStartTimeMinutes))) {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu);
+                            verschilLaatstePoepEnNu = verschilLaatstePoepEnNu - 8;
+                        //else if onder - nu is niet in wakkertijd, maar nog wel voor 12 uur (zet dan nu terug naar startslaaptijd zelfde avond)
+                        } else if (nu.isAfter(nu.withHour(22).withMinute(sleepStartTimeMinutes)) && nu.isBefore(nu.withHour(23).withMinute(59))) {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu.withHour(22).withMinute(sleepStartTimeMinutes));
+                        //else onder - nu is niet in wakkertijd (zet dan nu terug naar startslaaptijd vorige avond)
+                        } else {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu.withDayOfMonth(yesterdayNumberOfDay).withHour(22).withMinute(sleepStartTimeMinutes));
+                        }
+                    //else if onder - laatstePoep is in slaaptijd, maar voor 12 uur in de nacht (zet dan laatstePoep naar 7:30 volgende dag)
+                    } else if (laatstePoep.isAfter(laatstePoep.withHour(22).withMinute(sleepStartTimeMinutes)) && laatstePoep.isBefore(laatstePoep.withHour(23).withMinute(59))) {
+                        //if onder - nu is in wakkertijd (zet laatstePoep naar 07:30 volgende dag)
+                        if (nu.isAfter(nu.withHour(7).withMinute(sleepEndTimeMinutes)) && nu.isBefore(nu.withHour(22).withMinute(sleepStartTimeMinutes))) {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep.withDayOfMonth(tomorrowNumberOfDayPoep).withHour(7).withMinute(sleepEndTimeMinutes), nu);
+                            //else if onder - nu is niet in wakkertijd, maar nog wel voor 12 uur (zet dan nu terug naar startslaaptijd zelfde avond)
+                        } else if (nu.isAfter(nu.withHour(22).withMinute(sleepStartTimeMinutes)) && nu.isBefore(nu.withHour(23).withMinute(59))) {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep.withDayOfMonth(tomorrowNumberOfDayPoep).withHour(7).withMinute(sleepEndTimeMinutes), nu.withHour(22).withMinute(sleepStartTimeMinutes));
+                            //else onder - nu is niet in wakkertijd (zet dan nu terug naar startslaaptijd vorige avond)
+                        } else {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep.withDayOfMonth(tomorrowNumberOfDayPoep).withHour(7).withMinute(sleepEndTimeMinutes), nu.withDayOfMonth(yesterdayNumberOfDay).withHour(22).withMinute(sleepStartTimeMinutes));
+                        }
+                    //else onder - laatstePoep is in slaaptijd, na 12 uur in de nacht (zet dan laatstePoep naar 7.30 deze ochtend)
+                    } else {
+                        //if onder - nu is in wakkertijd (zet laatstePoep naar 07:30 deze dag)
+                        if (nu.isAfter(nu.withHour(7).withMinute(sleepEndTimeMinutes)) && nu.isBefore(nu.withHour(22).withMinute(sleepStartTimeMinutes))) {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep.withHour(7).withMinute(sleepEndTimeMinutes), nu);
+                            //else if onder - nu is niet in wakkertijd, maar nog wel voor 12 uur (zet dan nu terug naar startslaaptijd zelfde avond)
+                        } else if (nu.isAfter(nu.withHour(22).withMinute(sleepStartTimeMinutes)) && nu.isBefore(nu.withHour(23).withMinute(59))) {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep.withHour(7).withMinute(sleepEndTimeMinutes), nu.withHour(22).withMinute(sleepStartTimeMinutes));
+                            //else onder - nu is niet in wakkertijd (zet dan nu terug naar startslaaptijd vorige avond)
+                        } else {
+                            verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep.withHour(7).withMinute(sleepEndTimeMinutes), nu.withDayOfMonth(yesterdayNumberOfDay).withHour(22).withMinute(sleepStartTimeMinutes));
+                        }
+                    }
+                } else {
+                    verschilLaatstePoepEnNu = ChronoUnit.HOURS.between(laatstePoep, nu);
+                }
+
+                //Hieronder kun je mee varieren om sneller/minder snel poep te krijgen /1 is ieder uur /2 is iedere 2 uur
+                Integer aantalNieuwePoep = (int) (verschilLaatstePoepEnNu / 1);
 
                 Integer totaalPoep = aantalPoepOpScherm + aantalNieuwePoep;
 
@@ -744,6 +778,11 @@ public class CatGameActivity extends MenuActivity {
                 }
                 adjustHappyMeter(-aantalNieuwePoep);
                 adjustHungryMeter(-aantalNieuwePoep);
+
+                if (aantalNieuwePoep > 2) {
+                    aantalNieuwePoep = 2;
+                }
+                adjustWeightMeter(-(aantalNieuwePoep*10));
             }
         }
     }
@@ -1050,8 +1089,6 @@ public class CatGameActivity extends MenuActivity {
             LocalDateTime now = null;
             now = LocalDateTime.now();
             currentDate = date.format(now);
-            System.out.println("CURRENTDATE: " + currentDate);
-
         }
         return currentDate;
     }
@@ -1064,8 +1101,6 @@ public class CatGameActivity extends MenuActivity {
             LocalDateTime now = null;
             now = LocalDateTime.now();
             currentTime = date.format(now);
-            System.out.println("CURRENTTime: " + currentTime);
-
         }
         return currentTime;
     }
