@@ -213,16 +213,17 @@ public class CatGameActivity extends MenuActivity {
         imageViewMedicationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*ToDo eerst checken of poep is en dat laten opruimen (via toast message). Als je eerst dit geeft dan kan het zijn dat
-                    ie nog een keer -happy doet en dat je daar dood van gaat
-                 */
                 if (!isZiekDateTime.equals("")) {
-                    feedMedication();
+                    //Huidige waarde ophalen uit sharedPrefs
+                    aantalPoepOpScherm = prefGame.getInt("aantalPoepOpScherm", 0);
+                    if(aantalPoepOpScherm == 0) {
+                        feedMedication();
+                    } else {
+                        Toast.makeText(CatGameActivity.this, "Clean up poop before feeding medication!", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(CatGameActivity.this, "Cat is not sick, no need for medication!", Toast.LENGTH_SHORT).show();
                 }
-                //ToDo onder is niet nodig refreshen, want of je showed toast, niks aan de hand dus. Of je doet feedmed, die heeft al refresh
-                stuffThatNeedsRefreshing();
             }
         });
 
