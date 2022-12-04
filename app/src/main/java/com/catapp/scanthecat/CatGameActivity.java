@@ -863,6 +863,7 @@ public class CatGameActivity extends MenuActivity {
             int sleepStartTimeMinutes = Integer.parseInt(sleepingStartTime.substring((sleepingStartTime.length() -2)));
             int numberOfDay = Integer.parseInt(getCurrentDateTime().substring(0,2));
             int yesterdayNumberOfDay = numberOfDay-1;
+            //ToDo maandwisseling zit er niet goed in. Als numberOfDay = 1, dan moet maand ook -1 gaan. Anders errors in developerconsole
             LocalDateTime slaapEindDatumTijd = nu.withHour(7).withMinute(sleepEndTimeMinutes);
             LocalDateTime slaapStartDatumTijd = nu.withDayOfMonth(yesterdayNumberOfDay).withHour(22).withMinute(sleepStartTimeMinutes);
             if (currentTime.isBefore(starttijdSlapen) && eindtijdSlapen.isBefore(currentTime)) {
