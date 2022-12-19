@@ -9,8 +9,8 @@ android {
         applicationId "com.catapp.scanthecat"
         minSdk 21
         targetSdk 32
-        versionCode 20
-        versionName "1.1.12"
+        versionCode 21
+        versionName "1.1.13"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
