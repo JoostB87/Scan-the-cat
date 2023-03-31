@@ -153,12 +153,17 @@ public class CatFullListRecViewAdapter extends RecyclerView.Adapter<CatFullListR
                 public void run() {
                     // do onPostExecute stuff GUI
                     Gson gson = new Gson();
+
                     // Convert JSON File to Java Object
                     Cat[] cats = gson.fromJson(resultCats, Cat[].class);
 
                     //Resetten van de url omdat ie anders shit achter elkaar blijft plakken.
                     myUrl = "https://api.api-ninjas.com/v1/cats?name=";
-                    if (cats.length > 0) {
+                    if (resultCats.isEmpty()) {
+                        Intent searchIntent = new Intent(context, MainActivity.class);
+                        searchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(searchIntent);
+                    } else if (cats.length > 0) {
                         //Ga direct naar displaycatresult, geen lijst nodig
                         Intent intentResult = new Intent(context, DisplayCatGeneralInfoActivity.class);
                         intentResult.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
