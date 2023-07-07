@@ -208,14 +208,21 @@ public class DisplayCatGifActivity extends MenuActivity {
                 // Convert JSON File to Java Object
                 catGif = gson.fromJson(resultCatImage, CatGifs[].class);
 
-                if (catGif.length > 0) {
-                    //Toon de 1e gif op het scherm als ophalen is gelukt
-                    Glide.with(getApplicationContext())
-                            .asGif()
-                            .load(catGif[0].getUrl())
-                            .into(catGifImageview);
+                if (catGif != null) {
+                    if (catGif.length > 0) {
+                        //Toon de 1e gif op het scherm als ophalen is gelukt
+                        Glide.with(getApplicationContext())
+                                .asGif()
+                                .load(catGif[0].getUrl())
+                                .into(catGifImageview);
 
-                    btnNextGif.setEnabled(true);
+                        btnNextGif.setEnabled(true);
+                    } else {
+                        //Probeer opnieuw gifs op te halen, want blijkbaar ging het niet goed vorig keer
+                        GetResultsAsync getResultsAsync = new GetResultsAsync();
+                        Thread thread = new Thread(getResultsAsync);
+                        thread.start();
+                    }
                 } else {
                     //Probeer opnieuw gifs op te halen, want blijkbaar ging het niet goed vorig keer
                     GetResultsAsync getResultsAsync = new GetResultsAsync();
